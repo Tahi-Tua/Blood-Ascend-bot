@@ -96,78 +96,101 @@ module.exports = (client) => {
     try {
       const channel = client.channels.cache.get(RULES_CHANNEL_ID);
       if (!channel) {
-        console.log("❌ Rules channel not found:", RULES_CHANNEL_ID);
+        console.log("❌ Salon des règles introuvable :", RULES_CHANNEL_ID);
         return;
       }
 
       const messages = await channel.messages.fetch({ limit: 50 }).catch(() => null);
       if (!messages) {
-        console.log("⚠️ Cannot access Rules channel. Please check bot permissions.");
+        console.log("⚠️ Impossible d'accéder au salon des règles. Vérifiez les permissions du bot.");
         return;
       }
 
       const state = loadState();
       const currentHash = rulesHash();
 
-      // If hash is identical, skip (even if message was deleted)
-      if (state.hash === currentHash) {
-        const existingMsg = state.messageId ? messages.get(state.messageId) : null;
-        if (!existingMsg) {
-          console.log("ℹ️ Rules: message not found but hash unchanged, skipping re-post");
-        } else {
-          console.log("✅ Rules: no changes, keeping existing message.");
-        }
+      // --- 1. Chercher les messages existants du bot dans le salon ---
+      const botMessages = messages
+        .filter((m) => m.author.id === client.user.id)
+        .sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+
+      // Trouver le message avec le bouton accept_rules (c'est le message des règles)
+      const existingRulesMsg = botMessages.find(
+        (m) => m.components?.length > 0 &&
+          m.components.some((row) =>
+            row.components.some((c) => c.customId === "accept_rules")
+          )
+      );
+
+      // Trouver le message bannière (message du bot avec une image mais sans embed)
+      const existingBannerMsg = botMessages.find(
+        (m) => m.attachments.size > 0 && m.embeds.length === 0
+      );
+
+      // --- 2. Hash identique → rien à faire ---
+      if (state.hash === currentHash && existingRulesMsg) {
+        console.log("✅ Règles : aucun changement, le message existant est conservé.");
+        // Mettre à jour les IDs dans le state au cas où
+        state.messageId = existingRulesMsg.id;
+        if (existingBannerMsg) state.bannerMsgId = existingBannerMsg.id;
+        await saveState(state);
         client.rulesMessagePosted = true;
         return;
       }
 
-      // Hash changed or new → delete old messages and post new ones
-      if (state.bannerMsgId) {
-        const oldBanner = messages.get(state.bannerMsgId);
-        if (oldBanner) {
-          await oldBanner.delete().catch(() => {});
-          console.log("🗑️ Rules: deleted old banner");
-        }
-      }
-      if (state.messageId) {
-        const oldMsg = messages.get(state.messageId);
-        if (oldMsg) {
-          await oldMsg.delete().catch(() => {});
-          console.log("🗑️ Rules: deleted old message");
-        }
-      }
-
-      // Build message components
+      // --- 3. Le message existe déjà → éditer au lieu de re-poster ---
       const embed = createRulesEmbed();
       const row = createAcceptButton();
 
-      // Send banner image FIRST (so it appears above the rules)
+      if (existingRulesMsg) {
+        await existingRulesMsg.edit({ embeds: [embed], components: [row] });
+        console.log("✏️ Règles : message existant mis à jour.");
+
+        state.hash = currentHash;
+        state.messageId = existingRulesMsg.id;
+        if (existingBannerMsg) state.bannerMsgId = existingBannerMsg.id;
+        await saveState(state);
+        client.rulesMessagePosted = true;
+        return;
+      }
+
+      // --- 4. Aucun message trouvé → poster pour la première fois ---
+      // Supprimer les anciens messages référencés dans le state (nettoyage)
+      if (state.bannerMsgId) {
+        const oldBanner = messages.get(state.bannerMsgId);
+        if (oldBanner) await oldBanner.delete().catch(() => {});
+      }
+      if (state.messageId) {
+        const oldMsg = messages.get(state.messageId);
+        if (oldMsg) await oldMsg.delete().catch(() => {});
+      }
+
+      // Envoyer la bannière d'abord
       let bannerMsgId = null;
       if (fs.existsSync(bannerPath)) {
         const attachment = new AttachmentBuilder(bannerPath, { name: RULES_BANNER_FILENAME });
         const bannerMsg = await channel.send({ files: [attachment] });
         bannerMsgId = bannerMsg.id;
-        console.log("🖼️ Rules banner posted");
+        console.log("🖼️ Bannière des règles postée");
       } else {
-        console.log("⚠️ Rules banner not found at:", bannerPath);
+        console.log("⚠️ Bannière introuvable :", bannerPath);
       }
 
-      // Then send the embed with rules
+      // Puis envoyer l'embed avec les règles
       const newMsg = await channel.send({
         embeds: [embed],
         components: [row],
       });
 
-      // Save new state
       state.hash = currentHash;
       state.messageId = newMsg.id;
       state.bannerMsgId = bannerMsgId;
       await saveState(state);
 
-      console.log("📜 Rules message posted successfully!");
+      console.log("📜 Message des règles posté avec succès !");
       client.rulesMessagePosted = true;
     } catch (err) {
-      console.error("❌ Error in Rules handler:", err.message);
+      console.error("❌ Erreur dans le handler des règles :", err.message);
     }
   });
 };
