@@ -52,19 +52,19 @@ module.exports = (client) => {
         const logEmbed = new EmbedBuilder()
           .setColor(alreadyHasRole ? 0xffaa00 : 0x00ff00)
           .setTitle(
-            alreadyHasRole ? "🔄 Rules Button Clicked" : "✅ Rules Accepted",
+            alreadyHasRole ? "🔄 Bouton Règles Cliqué" : "✅ Règles Acceptées",
           )
           .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
           .addFields(
-            { name: "👤 User", value: `${member.user.tag}`, inline: true },
+            { name: "👤 Utilisateur", value: `${member.user.tag}`, inline: true },
             { name: "🆔 ID", value: `${member.user.id}`, inline: true },
             {
-              name: "📌 Status",
-              value: alreadyHasRole ? "Already a member" : "Rules accepted (awaiting staff approval)",
+              name: "📌 Statut",
+              value: alreadyHasRole ? "Déjà membre" : "Règles acceptées (en attente d'approbation du staff)",
               inline: false,
             },
           )
-          .setFooter({ text: "༒ Blood Ascend ༒ • Verification System" })
+          .setFooter({ text: "༒ Blood Ascend ༒ • Système de Vérification" })
           .setTimestamp();
 
         const leaderRole = guild.roles.cache.get(LEADER_ROLE_ID);
@@ -91,17 +91,17 @@ module.exports = (client) => {
 
       if (alreadyHasRole) {
         return interaction.editReply({
-          content: "✔ You already accepted the rules!",
+          content: "✔ Tu as déjà accepté les règles !",
         });
       }
 
       // Send confirmation message
       await interaction.editReply({
         content:
-          "✅ Rules accepted!\n\n" +
-          `📋 **[JOIN-US channel](https://discord.com/channels/${guild.id}/${JOIN_US_CHANNEL_ID})**\n\n` +
-          "ℹ️ If you'd like to **apply to join the syndicate**, please send your **Player ID** and **account/hero screenshots** in the Join-Us channel.\n" +
-          "You **do not** need to apply just to be a member of this server.",
+          "✅ Règles acceptées !\n\n" +
+          `📋 **[Salon JOIN-US](https://discord.com/channels/${guild.id}/${JOIN_US_CHANNEL_ID})**\n\n` +
+          "ℹ️ Si tu veux **postuler pour rejoindre le syndicat**, envoie ton **ID Joueur** et tes **captures d'écran de compte/héros** dans le salon Join-Us.\n" +
+          "Tu n'as **pas besoin** de postuler juste pour être membre de ce serveur.",
       });
 
       // Send notification to JOIN_US channel
@@ -109,20 +109,20 @@ module.exports = (client) => {
       if (joinUsChannel) {
         const welcomeEmbed = new EmbedBuilder()
           .setColor(0x00d4ff)
-          .setTitle("🎯 Syndicate Application (Optional)")
+          .setTitle("🎯 Candidature au Syndicat (Optionnel)")
           .setDescription(
-            `Welcome, **${member.user}**!\n\n` +
-            `This channel is **only** for players who want to **apply to join the syndicate**.\n\n` +
-            `**What to send (only if applying):**\n` +
-            `🆔 Your Player ID\n` +
-            `📸 Screenshots (stats/heroes) **or** a valid official stats link\n\n` +
-            `**What happens next:**\n` +
-            `✅ Our staff will review your submission\n` +
-            `🎉 If approved, a staff member will contact you\n` +
-            `⏱️ Review typically takes a few hours`
+            `Bienvenue, **${member.user}** !\n\n` +
+            `Ce salon est **uniquement** pour les joueurs qui veulent **postuler pour rejoindre le syndicat**.\n\n` +
+            `**Ce qu'il faut envoyer (si tu postules) :**\n` +
+            `🆔 Ton ID Joueur\n` +
+            `📸 Captures d'écran (stats/héros) **ou** un lien officiel de stats\n\n` +
+            `**Que se passe-t-il ensuite :**\n` +
+            `✅ Notre staff examinera ta soumission\n` +
+            `🎉 Si approuvé, un membre du staff te contactera\n` +
+            `⏱️ L'examen prend généralement quelques heures`
           )
           .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-          .setFooter({ text: "༒ Blood Ascend ༒ • Recruitment System" })
+          .setFooter({ text: "༒ Blood Ascend ༒ • Système de Recrutement" })
           .setTimestamp();
 
         await joinUsChannel
@@ -140,7 +140,7 @@ module.exports = (client) => {
       if (error?.code === 10062) return;
 
       const payload = {
-        content: "❌ An error occurred. Please try again.",
+        content: "❌ Une erreur s'est produite. Veuillez réessayer.",
         flags: MessageFlags.Ephemeral,
       };
 

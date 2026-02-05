@@ -33,7 +33,7 @@ module.exports = (client) => {
 
         if (!guild || !channel) {
           await interaction
-            .reply({ content: "❌ Ticket context missing.", flags: MessageFlags.Ephemeral })
+            .reply({ content: "❌ Contexte du ticket manquant.", flags: MessageFlags.Ephemeral })
             .catch(() => {});
           return;
         }
@@ -42,7 +42,7 @@ module.exports = (client) => {
         if (!userId || !isValidDiscordId(userId)) {
           await interaction
             .reply({ 
-              content: "❌ Invalid ticket: user ID missing or malformed. Please create a new ticket.", 
+              content: "❌ Ticket invalide : ID utilisateur manquant ou malformé. Crée un nouveau ticket.", 
               flags: MessageFlags.Ephemeral 
             })
             .catch(() => {});
@@ -55,28 +55,28 @@ module.exports = (client) => {
 
           const select = new StringSelectMenuBuilder()
             .setCustomId(`deny_reasons_select:${messageId}`)
-            .setPlaceholder("Select a reason for rejection")
+            .setPlaceholder("Sélectionne une raison de refus")
             .addOptions([
-              { label: "Insufficient stats", value: "Insufficient stats" },
-              { label: "Incomplete screenshots", value: "Incomplete screenshots" },
-              { label: "Invalid/No stats link", value: "Invalid or missing stats link" },
-              { label: "Not meeting requirements", value: "Not meeting requirements" },
-              { label: "Behavior concerns", value: "Behavior concerns" },
-              { label: "Syndicate is full", value: "Syndicate is currently full" },
-              { label: "Wrong server/region", value: "Wrong server or region" },
+              { label: "Stats insuffisantes", value: "Stats insuffisantes" },
+              { label: "Captures d'écran incomplètes", value: "Captures d'écran incomplètes" },
+              { label: "Lien de stats invalide/manquant", value: "Lien de stats invalide ou manquant" },
+              { label: "Exigences non remplies", value: "Exigences non remplies" },
+              { label: "Problèmes de comportement", value: "Problèmes de comportement" },
+              { label: "Le syndicat est complet", value: "Le syndicat est actuellement complet" },
+              { label: "Mauvais serveur/région", value: "Mauvais serveur ou région" },
             ]);
 
           const selectRow = new ActionRowBuilder().addComponents(select);
           const customBtnRow = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
               .setCustomId(`deny_custom_reason:${messageId}`)
-              .setLabel("Type custom reason")
+              .setLabel("Écrire une raison personnalisée")
               .setStyle(ButtonStyle.Secondary),
           );
 
           await interaction
             .reply({
-              content: "Choose a predefined reason or type a custom one:",
+              content: "Choisis une raison prédéfinie ou écris la tienne :",
               components: [selectRow, customBtnRow],
               ephemeral: true,
             })
@@ -108,7 +108,7 @@ module.exports = (client) => {
 
         await interaction
           .followUp({
-            content: `Application **ACCEPTED** by ${moderator}.`,
+            content: `Candidature **ACCEPTÉE** par ${moderator}.`,
             allowedMentions: { users: [] },
           })
           .catch(() => {});
@@ -117,7 +117,7 @@ module.exports = (client) => {
         if (error?.code === 10062) return;
 
         const payload = {
-          content: "? An error occurred. Please try again.",
+          content: "? Une erreur s'est produite. Veuillez réessayer.",
           flags: MessageFlags.Ephemeral,
         };
 
@@ -145,7 +145,7 @@ module.exports = (client) => {
         // Validate all required context including Discord ID format
         if (!guild || !channel || !selected) {
           await interaction
-            .reply({ content: "❌ Missing context or reason.", ephemeral: true })
+            .reply({ content: "❌ Contexte ou raison manquant.", ephemeral: true })
             .catch(() => {});
           return;
         }
@@ -153,7 +153,7 @@ module.exports = (client) => {
         if (!userId || !isValidDiscordId(userId)) {
           await interaction
             .reply({ 
-              content: "❌ Invalid ticket: user ID missing or malformed.", 
+              content: "❌ Ticket invalide : ID utilisateur manquant ou malformé.", 
               ephemeral: true 
             })
             .catch(() => {});
@@ -206,11 +206,11 @@ module.exports = (client) => {
         const [, messageId] = cid.split(":");
         const modal = new ModalBuilder()
           .setCustomId(`deny_reason_modal:${messageId}`)
-          .setTitle("Decline Application");
+          .setTitle("Refuser la candidature");
 
         const reasonInput = new TextInputBuilder()
           .setCustomId("deny_reason")
-          .setLabel("Reason for rejection")
+          .setLabel("Raison du refus")
           .setStyle(TextInputStyle.Paragraph)
           .setRequired(true)
           .setMaxLength(500);
@@ -221,7 +221,7 @@ module.exports = (client) => {
       } catch (error) {
         console.error("Error opening custom reason modal:", error);
         await interaction
-          .reply({ content: "? Unable to open modal.", ephemeral: true })
+          .reply({ content: "? Impossible d'ouvrir le formulaire.", ephemeral: true })
           .catch(() => {});
       }
     }
@@ -242,7 +242,7 @@ module.exports = (client) => {
 
         if (!guild || !channel) {
           await interaction
-            .reply({ content: "❌ Missing ticket context.", flags: MessageFlags.Ephemeral })
+            .reply({ content: "❌ Contexte du ticket manquant.", flags: MessageFlags.Ephemeral })
             .catch(() => {});
           return;
         }
@@ -251,7 +251,7 @@ module.exports = (client) => {
         if (!userId || !isValidDiscordId(userId)) {
           await interaction
             .reply({ 
-              content: "❌ Invalid ticket: user ID missing or malformed.", 
+              content: "❌ Ticket invalide : ID utilisateur manquant ou malformé.", 
               flags: MessageFlags.Ephemeral 
             })
             .catch(() => {});
@@ -275,14 +275,14 @@ module.exports = (client) => {
 
         if (!result.ok) {
           await interaction
-            .reply({ content: `? ${result.error || "Action failed."}`, ephemeral: true })
+            .reply({ content: `? ${result.error || "Action échouée."}`, ephemeral: true })
             .catch(() => {});
           return;
         }
 
         await interaction
           .reply({
-            content: `Application **DECLINED** by ${moderator}.`,
+            content: `Candidature **REFUSÉE** par ${moderator}.`,
             ephemeral: true,
             allowedMentions: { users: [] },
           })
@@ -290,7 +290,7 @@ module.exports = (client) => {
       } catch (error) {
         console.error("Error handling decline modal:", error);
         await interaction
-          .reply({ content: "? An error occurred.", ephemeral: true })
+          .reply({ content: "? Une erreur s'est produite.", ephemeral: true })
           .catch(() => {});
       }
     }

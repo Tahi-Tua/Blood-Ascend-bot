@@ -82,7 +82,7 @@ function createAcceptButton() {
   return new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId("accept_rules")
-      .setLabel("✅ Accept Rules")
+      .setLabel("✅ Accepter les Règles")
       .setStyle(ButtonStyle.Success)
   );
 }

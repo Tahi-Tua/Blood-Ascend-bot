@@ -31,7 +31,7 @@ module.exports = (client) => {
         // Optionally notify the user that their application is being processed
         await message.author
           .send(
-            "⚠️ Your application is already being processed. Please wait a moment."
+            "⚠️ Ta candidature est déjà en cours de traitement. Merci de patienter."
           )
           .catch(() => {});
         return;
@@ -50,8 +50,8 @@ module.exports = (client) => {
         await message.delete().catch(() => {});
         return message.author
           .send(
-            "❌ Your message in **Join-Us** was removed.\n" +
-              "Please send **screenshots** or an **official stats link** only.",
+            "❌ Ton message dans **Join-Us** a été supprimé.\n" +
+              "Envoie uniquement des **captures d'écran** ou un **lien officiel de stats**.",
           )
           .catch(() => {});
       }
@@ -74,14 +74,14 @@ module.exports = (client) => {
       if (existingTicketEarly) {
         creatingTickets.delete(message.author.id);
         return message.author
-          .send(`⚠️ You already have an open ticket: ${existingTicketEarly}.`)
+          .send(`⚠️ Tu as déjà un ticket ouvert : ${existingTicketEarly}.`)
           .catch(() => {});
       }
 
       const botReply = await message.channel.send({
         content:
-          "🙏 Thank you for your information!\n" +
-          "**Our administrators are now reviewing your application.**",
+          "🙏 Merci pour tes informations !\n" +
+          "**Nos administrateurs examinent maintenant ta candidature.**",
         allowedMentions: { users: [message.author.id] },
       });
 
@@ -89,10 +89,10 @@ module.exports = (client) => {
       if (admin) {
         await admin
           .send(
-            `📥 **New Join-Us Application**\n` +
-              `From: **${message.author.tag}**\n` +
-              `Channel: ${message.channel}\n` +
-              `Time: ${new Date().toLocaleString()}`,
+            `📥 **Nouvelle candidature Join-Us**\n` +
+              `De : **${message.author.tag}**\n` +
+              `Salon : ${message.channel}\n` +
+              `Date : ${new Date().toLocaleString()}`,
           )
           .catch(() => {});
       }
@@ -117,8 +117,8 @@ module.exports = (client) => {
       }
 
       const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId("accept_app").setLabel("ACCEPT").setStyle(ButtonStyle.Success),
-        new ButtonBuilder().setCustomId("deny_app").setLabel("DECLINE").setStyle(ButtonStyle.Danger),
+        new ButtonBuilder().setCustomId("accept_app").setLabel("ACCEPTER").setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId("deny_app").setLabel("REFUSER").setStyle(ButtonStyle.Danger),
       );
 
       // Build permission overwrites for the ticket
@@ -166,14 +166,14 @@ module.exports = (client) => {
 
       const roleMentions = [leaderRole ? `<@&${LEADER_ROLE_ID}>` : '', staffRole ? `<@&${STAFF_ROLE_ID}>` : ''].filter(Boolean).join(' ');
       const decisionMessage = await ticket.send({
-        content: `📥 New application from **${message.author.tag}**\n${roleMentions} <@${ADMIN_USER_ID}>`,
+        content: `📥 Nouvelle candidature de **${message.author.tag}**\n${roleMentions} <@${ADMIN_USER_ID}>`,
         embeds: [
           new EmbedBuilder()
             .setColor(0x0099ff)
-            .setTitle("📝 New Application")
+            .setTitle("📝 Nouvelle Candidature")
             .setDescription(
-              "Review the candidate's screenshots and/or stats.\n\n" +
-                "Once a decision is made, click **ACCEPT** or **DECLINE**.",
+              "Examine les captures d'écran et/ou les stats du candidat.\n\n" +
+                "Une fois la décision prise, clique sur **ACCEPTER** ou **REFUSER**.",
             ),
         ],
         components: [row],
@@ -183,7 +183,7 @@ module.exports = (client) => {
       if (message.attachments.size > 0) {
         await ticket.send({ files: [...message.attachments.values()] });
       } else {
-        await ticket.send(`🔗 Stats link: ${message.content}`);
+        await ticket.send(`🔗 Lien des stats : ${message.content}`);
       }
 
       await ticket.send({

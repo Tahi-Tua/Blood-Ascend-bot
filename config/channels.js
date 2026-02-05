@@ -1,6 +1,6 @@
 module.exports = {
   // ═══════════════════════════════════════════════════════════════
-  // CHANNELS
+  // SALONS
   // ═══════════════════════════════════════════════════════════════
   RULES_CHANNEL_ID: "1466538910665539769",
   HELLO_CHANNEL_ID: "1466538752351666400",
@@ -19,7 +19,7 @@ module.exports = {
   BUG_REPORTS_CHANNEL_ID: null,
 
   // ═══════════════════════════════════════════════════════════════
-  // ROLES - IDs
+  // RÔLES - IDs
   // ═══════════════════════════════════════════════════════════════
   LEADER_ROLE_ID: "1466555828025692447",
   STAFF_ROLE_ID: "1466557112711778466",
@@ -31,14 +31,14 @@ module.exports = {
   SVS_ROLE_ID: "1466557032654962820",
 
   // ═══════════════════════════════════════════════════════════════
-  // ROLES - Names (pour recherche par nom si ID non défini)
+  // RÔLES - Noms (pour recherche par nom si ID non défini)
   // ═══════════════════════════════════════════════════════════════
   MEMBER_ROLE_NAME: "Member",
   READ_ONLY_ROLE_NAME: "Read Only",
   VISITOR_ROLE_NAME: "Visitor",
 
   // ═══════════════════════════════════════════════════════════════
-  // BYPASS & FILTERS (modération)
+  // BYPASS & FILTRES (modération)
   // ═══════════════════════════════════════════════════════════════
   BYPASS_ROLE_IDS: [
     "1466555828025692447", // Leader
@@ -51,12 +51,12 @@ module.exports = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
-  // THRESHOLDS & SETTINGS
+  // SEUILS & PARAMÈTRES
   // ═══════════════════════════════════════════════════════════════
   READ_ONLY_THRESHOLD: 10,
 
   // ═══════════════════════════════════════════════════════════════
-  // TIMING (ms)
+  // DÉLAIS (ms)
   // ═══════════════════════════════════════════════════════════════
   TICKET_CLOSE_DELAY_MS: 5000,         // Délai avant fermeture d'un ticket
   SVS_POLL_TIMEOUT_MS: 20 * 60 * 1000, // Durée du sondage SVS (20 min)

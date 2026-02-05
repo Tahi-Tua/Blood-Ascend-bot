@@ -61,23 +61,23 @@ async function sendReminder(channel, customTimeout = null) {
   
   const embed = new EmbedBuilder()
     .setColor(0xff6b00)
-    .setTitle("⚔️ SVS Reminder")
+    .setTitle("⚔️ Rappel SVS")
     .setDescription(
-      "**Come on guys, get ready for the next SVS!**\n\n" +
-      "Click a button to indicate your availability.\n" +
-      `Teams will be formed in **${timeoutMinutes} minute${timeoutMinutes > 1 ? 's' : ''}**.`
+      "**Allez les gars, préparez-vous pour le prochain SVS !**\n\n" +
+      "Clique sur un bouton pour indiquer ta disponibilité.\n" +
+      `Les équipes seront formées dans **${timeoutMinutes} minute${timeoutMinutes > 1 ? 's' : ''}**.`
     )
-    .setFooter({ text: "༒ 𝔹𝕝𝕠𝕠𝕕 𝔸𝕤𝕔𝕖𝕟𝕕 ༒ • SVS System" })
+    .setFooter({ text: "༒ 𝔹𝕝𝕠𝕠𝕕 𝔸𝕤𝕔𝕖𝕟𝕕 ༒ • Système SVS" })
     .setTimestamp();
 
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId("svs_yes")
-      .setLabel("✅ Yes, I'm available")
+      .setLabel("✅ Oui, je suis dispo")
       .setStyle(ButtonStyle.Success),
     new ButtonBuilder()
       .setCustomId("svs_no")
-      .setLabel("❌ No, not available")
+      .setLabel("❌ Non, pas dispo")
       .setStyle(ButtonStyle.Danger)
   );
 
@@ -118,12 +118,12 @@ async function finalizePoll(channel, messageId) {
       const disabledRow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
           .setCustomId("svs_yes_disabled")
-          .setLabel(`✅ Yes (${yesMembers.length})`)
+          .setLabel(`✅ Oui (${yesMembers.length})`)
           .setStyle(ButtonStyle.Success)
           .setDisabled(true),
         new ButtonBuilder()
           .setCustomId("svs_no_disabled")
-          .setLabel(`❌ No (${noMembers.length})`)
+          .setLabel(`❌ Non (${noMembers.length})`)
           .setStyle(ButtonStyle.Danger)
           .setDisabled(true)
       );
@@ -135,18 +135,18 @@ async function finalizePoll(channel, messageId) {
 
   let resultEmbed = new EmbedBuilder()
     .setColor(0x3498db)
-    .setTitle("📊 SVS Results")
+    .setTitle("📊 Résultats SVS")
     .setTimestamp();
 
   if (yesMembers.length === 0) {
-    resultEmbed.setDescription("No members available for this SVS.");
+    resultEmbed.setDescription("Aucun membre disponible pour ce SVS.");
   } else {
     const teams = createTeams(yesMembers, 5);
     
-    let teamsDescription = `**${yesMembers.length} members available**\n\n`;
+    let teamsDescription = `**${yesMembers.length} membres disponibles**\n\n`;
     
     teams.forEach((team, index) => {
-      teamsDescription += `**Team ${index + 1}** (${team.length} members)\n`;
+      teamsDescription += `**Équipe ${index + 1}** (${team.length} membres)\n`;
       team.forEach((member) => {
         teamsDescription += `• ${member.displayName}\n`;
       });
@@ -154,13 +154,13 @@ async function finalizePoll(channel, messageId) {
     });
 
     if (noMembers.length > 0) {
-      teamsDescription += `\n**Not available:** ${noMembers.length} member(s)`;
+      teamsDescription += `\n**Non disponibles :** ${noMembers.length} membre(s)`;
     }
 
     resultEmbed.setDescription(teamsDescription);
   }
 
-  resultEmbed.setFooter({ text: "༒ 𝔹𝕝𝕠𝕠𝕕 𝔸𝕤𝕔𝕖𝕟𝕕 ༒ • SVS Teams" });
+  resultEmbed.setFooter({ text: "༒ 𝔹𝕝𝕠𝕠𝕕 𝔸𝕤𝕔𝕖𝕟𝕕 ༒ • Équipes SVS" });
 
   const svsChannel = channel.client.channels.cache.get(SVS_CHANNEL_ID);
   if (svsChannel) {
@@ -239,7 +239,7 @@ module.exports = (client) => {
     if (!pollData) {
       try {
         await interaction.reply({
-          content: "⏰ This poll has ended.",
+          content: "⏰ Ce sondage est terminé.",
           flags: MessageFlags.Ephemeral,
         });
       } catch (err) {
@@ -261,7 +261,7 @@ module.exports = (client) => {
       pollData.yes.set(user.id, memberInfo);
       try {
         await interaction.reply({
-          content: "✅ You are registered as **available** for SVS!",
+          content: "✅ Tu es inscrit comme **disponible** pour le SVS !",
           flags: MessageFlags.Ephemeral,
         });
       } catch (err) {
@@ -271,7 +271,7 @@ module.exports = (client) => {
       pollData.no.set(user.id, memberInfo);
       try {
         await interaction.reply({
-          content: "❌ You are registered as **not available** for SVS.",
+          content: "❌ Tu es inscrit comme **non disponible** pour le SVS.",
           flags: MessageFlags.Ephemeral,
         });
       } catch (err) {

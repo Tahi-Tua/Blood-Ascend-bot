@@ -21,23 +21,23 @@ function getWelcomePayload(member) {
 
   const embed1 = new EmbedBuilder()
     .setColor(0x3498db)
-    .setTitle("🌟 Welcome to ༒ Blood Ascend ༒ 🌟")
+    .setTitle("🌟 Bienvenue sur ༒ Blood Ascend ༒ 🌟")
     .setDescription(
-      `Hello ${member} 👋\nWe're glad you're here! Here's how to get started:`,
+      `Salut ${member} 👋\nContent de te voir ! Voici comment commencer :`,
     )
     .addFields(
       {
-        name: "🚪 Start here",
+        name: "🚪 Commence ici",
         value: [
-          `• Read the rules: <#${RULES_CHANNEL_ID}>`,
+          `• Lis les règles : <#${RULES_CHANNEL_ID}>`,
         ].join("\n"),
       },
       {
-        name: "🎮 Explore & share",
+        name: "🎮 Explore et partage",
         value: [
-          `• Chat with everyone: <#${GENERAL_CHAT_ID}>`,
-          `• Post your highlights: <#${SCREENSHOTS_CHANNEL_ID}>`,
-          `• Discover tips: <#${DIVINE_TIPS_CHANNEL_ID}>`,
+          `• Discute avec tout le monde : <#${GENERAL_CHAT_ID}>`,
+          `• Poste tes highlights : <#${SCREENSHOTS_CHANNEL_ID}>`,
+          `• Découvre des astuces : <#${DIVINE_TIPS_CHANNEL_ID}>`,
         ].join("\n"),
       },
       
@@ -49,11 +49,11 @@ function getWelcomePayload(member) {
   const embed2 = new EmbedBuilder()
     .setColor(0x2ecc71)
     .setDescription(
-      `Want to **apply to join the syndicate**? Post your **Player ID** and **screenshots** (stats/heroes), or a **valid official stats link** in ${joinUsMention}.\n\n`
+      `Tu veux **rejoindre le syndicat** ? Poste ton **ID Joueur** et tes **captures d'écran** (stats/héros), ou un **lien officiel de stats** dans ${joinUsMention}.\n\n`
     );
 
   return {
-    content: `🎉 Welcome ${member}! Make yourself at home.`,
+    content: `🎉 Bienvenue ${member} ! Fais comme chez toi.`,
     embeds: [embed1, embed2],
     files: [introAttachment],
   };

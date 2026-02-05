@@ -3,23 +3,23 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
 
-// Validate required environment variables
+// Valider les variables d'environnement requises
 if (!process.env.DISCORD_TOKEN) {
-  console.error("❌ DISCORD_TOKEN is required. Please set it in your .env file.");
+  console.error("❌ DISCORD_TOKEN est requis. Définissez-le dans votre fichier .env.");
   process.exit(1);
 }
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers, // Required for welcome messages and role management
+    GatewayIntentBits.GuildMembers, // Requis pour les messages de bienvenue et la gestion des rôles
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.DirectMessages,
   ],
 });
 
-// Load all handlers from ./handlers directory
+// Charger tous les handlers depuis le dossier ./handlers
 const handlersPath = path.join(__dirname, "../handlers");
 const handlerFiles = fs
   .readdirSync(handlersPath)
@@ -30,39 +30,39 @@ for (const file of handlerFiles) {
     const handler = require(path.join(handlersPath, file));
     if (typeof handler === "function") {
       handler(client);
-      console.log(`✅ Loaded handler: ${file}`);
+      console.log(`✅ Handler chargé : ${file}`);
     }
   } catch (error) {
-    console.error(`❌ Error loading handler ${file}:`, error.message);
+    console.error(`❌ Erreur lors du chargement du handler ${file}:`, error.message);
   }
 }
 
-// Ready event
+// Événement Ready
 client.once("ready", () => {
-  console.log(`\n🤖 Bot logged in as ${client.user.tag}`);
-  console.log(`📊 Watching ${client.guilds.cache.size} server(s)\n`);
+  console.log(`\n🤖 Bot connecté en tant que ${client.user.tag}`);
+  console.log(`📊 Surveillance de ${client.guilds.cache.size} serveur(s)\n`);
 });
 
 // ═══════════════════════════════════════════════════════════════
-// ERROR HANDLERS - Prevent silent crashes
+// GESTIONNAIRES D'ERREURS - Prévenir les crashs silencieux
 // ═══════════════════════════════════════════════════════════════
 
 client.on("error", (error) => {
-  console.error("❌ Discord client error:", error.message);
+  console.error("❌ Erreur client Discord:", error.message);
 });
 
 client.on("warn", (warning) => {
-  console.warn("⚠️ Discord client warning:", warning);
+  console.warn("⚠️ Avertissement client Discord:", warning);
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  console.error("❌ Unhandled Promise Rejection:", reason);
+  console.error("❌ Rejet de Promise non géré:", reason);
 });
 
 process.on("uncaughtException", (error) => {
-  console.error("❌ Uncaught Exception:", error);
-  // Don't exit - let the bot continue running if possible
+  console.error("❌ Exception non capturée:", error);
+  // Ne pas quitter - laisser le bot continuer à fonctionner si possible
 });
 
-// Login
+// Connexion
 client.login(process.env.DISCORD_TOKEN);

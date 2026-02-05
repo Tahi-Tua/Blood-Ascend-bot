@@ -135,16 +135,16 @@ async function sendMemberViolationReport(user, violations, isSpamViolation = fal
     });
     
     const totalViolations = violations.length;
-    const reportType = isSpamViolation ? "🔴 Real-time Spam Detection" : "🔵 History Scan";
+    const reportType = isSpamViolation ? "🔴 Détection Spam en Temps Réel" : "🔵 Scan d'Historique";
     
     const report = new EmbedBuilder()
       .setColor(0xff6b6b)
-      .setTitle("📋 Your Violation Report")
-      .setDescription(`Report Type: **${reportType}**\nStatus: **ACTIVE MONITORING**`)
+      .setTitle("📋 Ton Rapport de Violations")
+      .setDescription(`Type de rapport : **${reportType}**\nStatut : **SURVEILLANCE ACTIVE**`)
       .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
       .addFields(
         { 
-          name: "👤 Member", 
+          name: "👤 Membre", 
           value: `${user}`, 
           inline: true 
         },
@@ -154,7 +154,7 @@ async function sendMemberViolationReport(user, violations, isSpamViolation = fal
           inline: true 
         },
         { 
-          name: "📅 Last Updated", 
+          name: "📅 Dernière MAJ", 
           value: new Date().toLocaleTimeString(), 
           inline: true 
         }
@@ -163,14 +163,14 @@ async function sendMemberViolationReport(user, violations, isSpamViolation = fal
     // Add violation breakdown
     if (badWordCount > 0) {
       report.addFields({
-        name: "🔴 Bad Words/Insults",
+        name: "🔴 Mots Interdits/Insultes",
         value: `**${badWordCount}** violation${badWordCount !== 1 ? 's' : ''}`,
         inline: true
       });
     }
     if (spamCount > 0) {
       report.addFields({
-        name: "🟠 Spam Violations",
+        name: "🟠 Violations Spam",
         value: `**${spamCount}** violation${spamCount !== 1 ? 's' : ''}`,
         inline: true
       });
@@ -183,7 +183,7 @@ async function sendMemberViolationReport(user, violations, isSpamViolation = fal
         .join("\n");
       
       report.addFields({
-        name: "📊 Type Breakdown",
+        name: "📊 Détail par Type",
         value: breakdownText,
         inline: false
       });
@@ -196,20 +196,20 @@ async function sendMemberViolationReport(user, violations, isSpamViolation = fal
         .join("\n\n");
       
       report.addFields({
-        name: "🚨 Recent Violations",
+        name: "🚨 Violations Récentes",
         value: violationsList,
         inline: false
       });
     }
 
     report.addFields({
-      name: "⚠️ Warning",
-      value: "This report is **actively being updated** as new violations are detected. Each time you violate rules, this report is updated to reflect your violation count. **Reaching 10+ violations triggers a 1-day mute.**",
+      name: "⚠️ Avertissement",
+      value: "Ce rapport est **mis à jour en temps réel** quand de nouvelles violations sont détectées. Chaque violation met à jour ce rapport. **Atteindre 10+ violations déclenche un mute d'1 jour.**",
       inline: false
     });
 
     report
-      .setFooter({ text: "Automated Moderation System • Member-Spam Channel" })
+      .setFooter({ text: "Système de Modération Automatique • Canal Member-Spam" })
       .setTimestamp();
 
     return report;

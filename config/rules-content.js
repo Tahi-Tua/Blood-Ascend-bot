@@ -1,53 +1,53 @@
 /**
- * Rules content configuration
- * Edit this file to update the server rules.
- * The bot will automatically detect changes and update the message.
+ * Configuration du contenu des règles
+ * Modifiez ce fichier pour mettre à jour les règles du serveur.
+ * Le bot détectera automatiquement les changements et mettra à jour le message.
  */
 
 const RULES_BANNER_FILENAME = "rules-banner.jpg";
 
-const RULES_TITLE = "📜 ༒ Blood Ascend ༒ SERVER RULES";
+const RULES_TITLE = "📜 ༒ Blood Ascend ༒ RÈGLES DU SERVEUR";
 
-const RULES_DESCRIPTION = `Welcome to our server's guidelines and rules channel 📝
+const RULES_DESCRIPTION = `Bienvenue dans le salon des règles et directives du serveur 📝
 
-These rules are in place to ensure a respectful and inclusive environment for everyone. They apply to **all messages** you post on the server and your **Discord profile**.`;
+Ces règles sont en place pour garantir un environnement respectueux et inclusif pour tous. Elles s'appliquent à **tous les messages** que vous publiez sur le serveur ainsi qu'à votre **profil Discord**.`;
 
 const RULES_FIELDS = [
   {
-    name: "🌐 Language",
-    value: "This server represents an **English-speaking community** and welcomes players from all countries. Please use English and don't try to bypass our filters; they are in place for a reason.",
+    name: "🌐 Langue",
+    value: "Ce serveur représente une **communauté francophone** et accueille des joueurs de tous les pays. Veuillez utiliser le français et n'essayez pas de contourner nos filtres ; ils sont là pour une bonne raison.",
     inline: false,
   },
   {
-    name: "💬 Appropriate Language",
-    value: "Use respectful and considerate language. Remember that some words may be offensive if used in the wrong context.",
+    name: "💬 Langage Approprié",
+    value: "Utilisez un langage respectueux et courtois. N'oubliez pas que certains mots peuvent être offensants s'ils sont utilisés dans un mauvais contexte.",
     inline: false,
   },
   {
-    name: "⚠️ Sensitive Topics",
-    value: "Avoid discussing serious subjects such as **politics**, **religion**, or other sensitive topics.",
+    name: "⚠️ Sujets Sensibles",
+    value: "Évitez de discuter de sujets sérieux tels que la **politique**, la **religion** ou d'autres sujets sensibles.",
     inline: false,
   },
   {
-    name: "😀 Reactions",
-    value: "Be careful with reactions. Any restricted content described above, created with emoji reactions, is also prohibited. Keep in mind that some reactions may be as offensive as some words in the wrong context.",
+    name: "😀 Réactions",
+    value: "Soyez prudent avec les réactions. Tout contenu restreint décrit ci-dessus, créé avec des réactions emoji, est également interdit. Gardez à l'esprit que certaines réactions peuvent être aussi offensantes que certains mots dans un mauvais contexte.",
     inline: false,
   },
   {
-    name: "🔊 Voice Channels",
-    value: "Maintain cleanliness in voice channels. Avoid using voice changers or playing loud sounds or music. Changing voice channels frequently to cause disturbances is also not permitted.",
+    name: "🔊 Salons Vocaux",
+    value: "Maintenez un comportement correct dans les salons vocaux. Évitez d'utiliser des modificateurs de voix ou de diffuser des sons forts ou de la musique. Changer fréquemment de salon vocal pour causer des perturbations n'est pas non plus autorisé.",
     inline: false,
   },
   {
-    name: "🤖 Bot Monitoring",
-    value: "**Note:** Spam messages and inappropriate expressions will be automatically recorded in your server history by our bot. Repeated violations may result in warnings, mutes, or bans.",
+    name: "🤖 Surveillance du Bot",
+    value: "**Note :** Les messages de spam et les expressions inappropriées seront automatiquement enregistrés dans votre historique du serveur par notre bot. Des violations répétées peuvent entraîner des avertissements, des mutes ou des bannissements.",
     inline: false,
   },
 ];
 
-const RULES_FOOTER = "༒ Blood Ascend ༒ • Click the button below to accept the rules";
+const RULES_FOOTER = "༒ Blood Ascend ༒ • Cliquez sur le bouton ci-dessous pour accepter les règles";
 
-const RULES_COLOR = 0x2b2d31; // Dark theme color
+const RULES_COLOR = 0x2b2d31; // Couleur thème sombre
 
 module.exports = {
   RULES_BANNER_FILENAME,

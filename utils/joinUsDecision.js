@@ -160,7 +160,7 @@ async function runJoinUsTicketDecision({
   if (!member) {
     if (decisionMessage) await decisionMessage.edit({ components: [] }).catch(() => {});
     await closeTicketSoon(ticketChannel);
-    return { ok: false, error: "User not found (left server?)" };
+    return { ok: false, error: "Utilisateur introuvable (a quitté le serveur ?)" };
   }
 
   if (decisionMessage) await decisionMessage.edit({ components: [] }).catch(() => {});
@@ -175,20 +175,20 @@ async function runJoinUsTicketDecision({
     await ticketChannel
       .send(
         roleChangeOk
-          ? `✅ Application **ACCEPTED** by ${moderatorLabel}${reason ? `\nReason: ${reason}` : ""}.`
-          : `✅ Application **ACCEPTED** by ${moderatorLabel}, but I couldn't change roles.\n⚠️ Please ensure the bot's role is above Guest/Member and has 'Manage Roles' permission.`,
+          ? `✅ Candidature **ACCEPTÉE** par ${moderatorLabel}${reason ? `\nRaison : ${reason}` : ""}.`
+          : `✅ Candidature **ACCEPTÉE** par ${moderatorLabel}, mais je n'ai pas pu changer les rôles.\n⚠️ Assure-toi que le rôle du bot est au-dessus de Guest/Member et a la permission 'Gérer les rôles'.`,
       )
       .catch(() => {});
 
     await member
       .send(
-        "✅ Your application has been **accepted**!\n" +
-          "An ༒ Blood Ascend ༒ staff member will reach out to you **in-game later today** to get you set up.",
+        "✅ Ta candidature a été **acceptée** !\n" +
+          "Un membre du staff ༒ Blood Ascend ༒ te contactera **en jeu plus tard aujourd'hui** pour t'intégrer.",
       )
       .catch(() => {});
 
     await closeTicketSoon(ticketChannel);
-    return roleChangeOk ? { ok: true } : { ok: false, error: "Insufficient permissions to change roles on acceptance." };
+    return roleChangeOk ? { ok: true } : { ok: false, error: "Permissions insuffisantes pour changer les rôles lors de l'acceptation." };
   }
 
   if (decision === "deny") {
@@ -196,7 +196,7 @@ async function runJoinUsTicketDecision({
 
     await ticketChannel
       .send(
-        `❌ Application **DECLINED** by ${moderatorLabel}${reason ? `\nReason: ${reason}` : ""}.`,
+        `❌ Candidature **REFUSÉE** par ${moderatorLabel}${reason ? `\nRaison : ${reason}` : ""}.`,
       )
       .catch(() => {});
 
@@ -207,14 +207,14 @@ async function runJoinUsTicketDecision({
     const memesMention = `<#${MEMES_CHANNEL_ID}>`;
 
     const declineMessage =
-      "Unfortunately your application has been rejected, " +
-      "If u want a friend or a team you can reach out to our members individually or maybe go to our\n\n" +
+      "Malheureusement ta candidature a été refusée, " +
+      "Si tu veux un ami ou une équipe tu peux contacter nos membres individuellement ou aller dans notre\n\n" +
       `${teamSearchMention}\n\n` +
-      "to get a team, but unfortunately we can't actually let you into the syndicate. " +
-      "Your application was rejected for the following reasons: " +
-      `${reason ? reason : "(no reason provided)"}. ` +
-      "When this is sorted out feel free to reach out to us and we'll gladly look into letting u in.\n" +
-      "For now feel free to explore the server:\n\n" +
+      "pour trouver une équipe, mais on ne peut malheureusement pas t'intégrer au syndicat. " +
+      "Ta candidature a été refusée pour les raisons suivantes : " +
+      `${reason ? reason : "(aucune raison fournie)"}. ` +
+      "Quand tout sera réglé, n'hésite pas à nous recontacter et on sera ravi de te reconsidérer.\n" +
+      "En attendant, explore le serveur :\n\n" +
       `${clipsMention}\n` +
       `${screenshotsMention}\n` +
       `${balanceChangesMention}\n` +
@@ -226,7 +226,7 @@ async function runJoinUsTicketDecision({
     return { ok: true };
   }
 
-  return { ok: false, error: "Invalid decision" };
+  return { ok: false, error: "Décision invalide" };
 }
 
 module.exports = {

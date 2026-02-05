@@ -56,9 +56,9 @@ module.exports = (client) => {
 
     message.author
       .send(
-        "⚠️ In **general-chat**, images and videos are not allowed.\n" +
-          "**GIFs are permitted!** Use Tenor or Giphy to share GIFs.\n" +
-          "For other media, please use the appropriate channels.",
+        "⚠️ Dans le **general-chat**, les images et vidéos ne sont pas autorisées.\n" +
+          "**Les GIFs sont permis !** Utilise Tenor ou Giphy pour partager des GIFs.\n" +
+          "Pour les autres médias, utilise les salons appropriés.",
       )
       .catch(() => {});
   });

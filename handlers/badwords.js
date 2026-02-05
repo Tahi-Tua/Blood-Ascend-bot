@@ -267,11 +267,11 @@ async function sendMemberBadwordReport(user, detectedWords, messageContent) {
     
     const report = new EmbedBuilder()
       .setColor(0xff6b6b)
-      .setTitle("🔴 Bad Language Detected")
+      .setTitle("🔴 Langage Inapproprié Détecté")
       .setThumbnail(user.displayAvatarURL({ dynamic: true, size: 256 }))
       .addFields(
         { 
-          name: "👤 Member", 
+          name: "👤 Membre", 
           value: `${user}`, 
           inline: true 
         },
@@ -281,7 +281,7 @@ async function sendMemberBadwordReport(user, detectedWords, messageContent) {
           inline: true 
         },
         { 
-          name: "📅 Last Updated", 
+          name: "📅 Dernière MAJ", 
           value: new Date().toLocaleTimeString(), 
           inline: true 
         }
@@ -292,12 +292,12 @@ async function sendMemberBadwordReport(user, detectedWords, messageContent) {
       const wordBreakdown = Object.entries(stats)
         .sort(([, a], [, b]) => b - a)
         .slice(0, 10)
-        .map(([word, count]) => `• **${word}**: ${count} time${count !== 1 ? 's' : ''}`)
+        .map(([word, count]) => `• **${word}**: ${count} fois`)
         .join("\n");
       
       report.addFields({
-        name: "📊 Bad Words Breakdown",
-        value: wordBreakdown || "None",
+        name: "📊 Détail des Mots",
+        value: wordBreakdown || "Aucun",
         inline: false
       });
     }
@@ -311,14 +311,14 @@ async function sendMemberBadwordReport(user, detectedWords, messageContent) {
         .join("\n\n");
       
       report.addFields({
-        name: "🚨 Recent Violations",
-        value: recentViolations || "None",
+        name: "🚨 Violations Récentes",
+        value: recentViolations || "Aucune",
         inline: false
       });
     }
 
     report
-      .setFooter({ text: "Automated Moderation System • Member-Spam Channel" })
+      .setFooter({ text: "Système de Modération Automatique • Canal Member-Spam" })
       .setTimestamp();
 
     return report;
