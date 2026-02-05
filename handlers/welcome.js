@@ -1,4 +1,5 @@
-const { EmbedBuilder, Events } = require("discord.js");
+const { EmbedBuilder, Events, AttachmentBuilder } = require("discord.js");
+const path = require("path");
 const {
   RULES_CHANNEL_ID,
   HELLO_CHANNEL_ID,
@@ -13,6 +14,10 @@ const {
 function getWelcomePayload(member) {
   const joinUs = member.guild.channels.cache.get(JOIN_US_CHANNEL_ID);
   const joinUsMention = joinUs ? `${joinUs}` : `<#${JOIN_US_CHANNEL_ID}>`;
+
+  // Attach intro.gif
+  const introPath = path.join(__dirname, "..", "attached_assets", "intro.gif");
+  const introAttachment = new AttachmentBuilder(introPath, { name: "intro.gif" });
 
   const embed1 = new EmbedBuilder()
     .setColor(0x3498db)
@@ -38,6 +43,7 @@ function getWelcomePayload(member) {
       
     )
     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+    .setImage("attachment://intro.gif")
     .setTimestamp();
 
   const embed2 = new EmbedBuilder()
@@ -49,6 +55,7 @@ function getWelcomePayload(member) {
   return {
     content: `🎉 Welcome ${member}! Make yourself at home.`,
     embeds: [embed1, embed2],
+    files: [introAttachment],
   };
 }
 

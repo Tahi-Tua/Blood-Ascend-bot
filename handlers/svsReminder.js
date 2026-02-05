@@ -67,7 +67,7 @@ async function sendReminder(channel, customTimeout = null) {
       "Click a button to indicate your availability.\n" +
       `Teams will be formed in **${timeoutMinutes} minute${timeoutMinutes > 1 ? 's' : ''}**.`
     )
-    .setFooter({ text: "Xavier Pro • SVS System" })
+    .setFooter({ text: "༒ 𝔹𝕝𝕠𝕠𝕕 𝔸𝕤𝕔𝕖𝕟𝕕 ༒ • SVS System" })
     .setTimestamp();
 
   const row = new ActionRowBuilder().addComponents(
