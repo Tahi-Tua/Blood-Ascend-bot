@@ -8,7 +8,6 @@ const {
   PermissionsBitField,
 } = require("discord.js");
 const { JOIN_US_CHANNEL_ID, LEADER_ROLE_ID, STAFF_ROLE_ID, PENDING_ROLE_ID, ADMIN_USER_ID } = require("../config/channels");
-const { sendToTelegram } = require("../utils/telegram");
 const { runJoinUsTicketDecision } = require("../utils/joinUsDecision");
 
 // Track ticket creation in progress for each user to prevent race conditions

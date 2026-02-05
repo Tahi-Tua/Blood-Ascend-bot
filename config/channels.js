@@ -8,11 +8,15 @@ module.exports = {
   SCREENSHOTS_CHANNEL_ID: "1466565301217919068",
   DIVINE_TIPS_CHANNEL_ID: "1466564951471558888",
   JOIN_US_CHANNEL_ID: "1466539015544111300",
+  TEAM_SEARCH_CHANNEL_ID: "1381575870468198460",
+  CLIPS_CHANNEL_ID: "1381581265542844496",
+  BALANCE_CHANGES_CHANNEL_ID: "1427088947871223848",
+  MEMES_CHANNEL_ID: "1381575710942167101",
   STAFF_LOG_CHANNEL_ID: "1466535478907113585",
-  MODERATION_LOG_CHANNEL_ID: "1466535478907113585", // Salon pour les logs de modération
-  SVS_REMINDER_CHANNEL_ID: "1466912367324561530", // Salon pour les rappels SVS
-  SVS_CHANNEL_ID: "1466909339465027708", // Salon pour afficher les équipes SVS
-  BUG_REPORTS_CHANNEL_ID: null, // TODO: Remplacer si utilisé
+  MODERATION_LOG_CHANNEL_ID: "1466535478907113585",
+  SVS_REMINDER_CHANNEL_ID: "1466912367324561530",
+  SVS_CHANNEL_ID: "1466909339465027708",
+  BUG_REPORTS_CHANNEL_ID: null,
 
   // ═══════════════════════════════════════════════════════════════
   // ROLES - IDs
@@ -21,32 +25,27 @@ module.exports = {
   STAFF_ROLE_ID: "1466557112711778466",
   APPLICANT_ROLE_ID: "1466556832557433077",
   UNVERIFIED_ROLE_ID: "1466556881802629378",
-  PENDING_ROLE_ID: "1466556918277013554", // TODO: Vérifier si correct
-  MEMBER_ROLE_ID: "1466557032654962820", // TODO: Remplacer avec l'ID du rôle Member
-  GUEST_ROLE_ID: "1466584401512239306", // TODO: Remplacer si utilisé
-  SVS_ROLE_ID: "1466557032654962820", // Rôle à mentionner pour les rappels SVS
+  PENDING_ROLE_ID: "1466556918277013554",
+  MEMBER_ROLE_ID: "1466557032654962820",
+  GUEST_ROLE_ID: "1466584401512239306",
+  SVS_ROLE_ID: "1466557032654962820",
 
   // ═══════════════════════════════════════════════════════════════
   // ROLES - Names (pour recherche par nom si ID non défini)
   // ═══════════════════════════════════════════════════════════════
   MEMBER_ROLE_NAME: "Member",
-  MOD_ROLE_NAME: "Staff",
   READ_ONLY_ROLE_NAME: "Read Only",
   VISITOR_ROLE_NAME: "Visitor",
 
   // ═══════════════════════════════════════════════════════════════
   // BYPASS & FILTERS (modération)
   // ═══════════════════════════════════════════════════════════════
-  // Rôles exemptés des filtres anti-spam/badwords (IDs)
   BYPASS_ROLE_IDS: [
     "1466555828025692447", // Leader
     "1466557112711778466", // Staff
   ],
-  // Salons exemptés des filtres
   FILTER_EXEMPT_CHANNEL_IDS: [],
-  // Catégories où les filtres sont forcés
   FILTER_ENFORCED_CATEGORY_IDS: [],
-  // Users autorisés à @everyone/@here
   ALLOWED_GLOBAL_MENTION_IDS: [
     "1466555828025692447", // Leader
   ],
@@ -54,10 +53,16 @@ module.exports = {
   // ═══════════════════════════════════════════════════════════════
   // THRESHOLDS & SETTINGS
   // ═══════════════════════════════════════════════════════════════
-  READ_ONLY_THRESHOLD: 10, // Nombre de violations avant mode lecture seule
+  READ_ONLY_THRESHOLD: 10,
+
+  // ═══════════════════════════════════════════════════════════════
+  // TIMING (ms)
+  // ═══════════════════════════════════════════════════════════════
+  TICKET_CLOSE_DELAY_MS: 5000,         // Délai avant fermeture d'un ticket
+  SVS_POLL_TIMEOUT_MS: 20 * 60 * 1000, // Durée du sondage SVS (20 min)
 
   // ═══════════════════════════════════════════════════════════════
   // ADMIN
   // ═══════════════════════════════════════════════════════════════
-  ADMIN_USER_ID: "1466083089590784236", // TODO: Remplacer avec ton ID Discord
+  ADMIN_USER_ID: "1466083089590784236",
 };

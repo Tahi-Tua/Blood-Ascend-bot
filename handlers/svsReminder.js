@@ -6,7 +6,7 @@ const {
   ButtonStyle,
   MessageFlags,
 } = require("discord.js");
-const { SVS_REMINDER_CHANNEL_ID, SVS_ROLE_ID, SVS_CHANNEL_ID } = require("../config/channels");
+const { SVS_REMINDER_CHANNEL_ID, SVS_ROLE_ID, SVS_CHANNEL_ID, SVS_POLL_TIMEOUT_MS } = require("../config/channels");
 
 // Desired local times (CET): 2:30, 7:30, 11:30, 16:00, 19:30, 23:30
 // We use the server's local time (no UTC conversion)
@@ -19,7 +19,7 @@ const SVS_TIMES = [
   { hour: 22, minute: 30 }, // 22:30
 ];
 
-const RESPONSE_TIMEOUT_MS = 20 * 60 * 1000;
+const RESPONSE_TIMEOUT_MS = SVS_POLL_TIMEOUT_MS;
 
 const activePolls = new Map();
 const sentToday = new Set();

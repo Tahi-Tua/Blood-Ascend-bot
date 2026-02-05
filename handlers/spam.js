@@ -1,11 +1,10 @@
 const { Events, EmbedBuilder } = require("discord.js");
 const { GENERAL_CHAT_ID, BUG_REPORTS_CHANNEL_ID, FILTER_EXEMPT_CHANNEL_IDS, FILTER_ENFORCED_CATEGORY_IDS, ALLOWED_GLOBAL_MENTION_IDS } = require("../config/channels");
 const { hasBypassRole } = require("../utils/bypass");
-const { sendModerationLog } = require("./badwords");
+const { sendModerationLog } = require("../utils/modLog");
 const { increment: incViolations, getCount: getViolationCount, hasReachedThreshold, reset: resetViolations } = require("../utils/violationStore");
 const { assignReadOnlyRole } = require("../utils/readOnlyRole");
 const { READ_ONLY_THRESHOLD } = require("../config/channels");
-const { sendToTelegram } = require("../utils/telegram");
 const {
   ZERO_WIDTH_REGEX,
   stripDiacritics,
@@ -13,7 +12,6 @@ const {
   normalizeLeetspeak,
   compressRepeats,
   normalizeContentForSpam,
-  buildTelegramMessage,
 } = require("../utils/moderationUtils");
 const muteStore = require("../utils/muteStore");
 
@@ -525,8 +523,10 @@ async function restoreMutesFromState(client) {
       }
 
       if (now >= expiresAt) {
-        // Mute has expired, remove it
-        await member.roles.remove(mutedRole).catch(() => {});
+        // Mute has expired, remove it only if member still has the role
+        if (member.roles.cache.has(mutedRole.id)) {
+          await member.roles.remove(mutedRole).catch(() => {});
+        }
         muteStore.removeMute(guildId, userId);
         mutedUsers.delete(userId);
         expired++;
@@ -539,7 +539,7 @@ async function restoreMutesFromState(client) {
         setTimeout(async () => {
           if (mutedUsers.has(userId)) {
             const currentMember = await guild.members.fetch(userId).catch(() => null);
-            if (currentMember) {
+            if (currentMember && currentMember.roles.cache.has(mutedRole.id)) {
               await currentMember.roles.remove(mutedRole).catch(() => {});
             }
             mutedUsers.delete(userId);
@@ -777,19 +777,6 @@ module.exports = (client) => {
       }
     } catch (err) {
       console.warn("⚠️ Read-only assignment check failed:", err.message);
-    }
-
-    if (typeof sendToTelegram === 'function') {
-      const telegramMessage = buildTelegramMessage({
-        prefix: '🚨 Spam detected',
-        author: message.author.tag,
-        authorId: message.author.id,
-        channel: message.channel.name,
-        violations: violations.join(", "),
-        action: punishment,
-        content: content
-      });
-      sendToTelegram(telegramMessage, { parse_mode: 'Markdown' });
     }
   });
   

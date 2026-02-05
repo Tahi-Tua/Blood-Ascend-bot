@@ -3,7 +3,7 @@
  * Centralized function to send moderation logs to avoid circular dependencies.
  */
 
-const { MODERATION_LOG_CHANNEL_ID, MOD_ROLE_NAME } = require("../config/channels");
+const { MODERATION_LOG_CHANNEL_ID, STAFF_ROLE_ID } = require("../config/channels");
 
 // Store message IDs for updating existing logs per user
 const memberModLogMessages = new Map();
@@ -28,7 +28,7 @@ async function sendModerationLog(guild, embed, user) {
 
   const userId = user?.id;
   const oldMessageId = userId ? memberModLogMessages.get(userId) : null;
-  const staffRole = guild.roles.cache.find((r) => r.name === MOD_ROLE_NAME);
+  const staffRole = STAFF_ROLE_ID ? guild.roles.cache.get(STAFF_ROLE_ID) : null;
 
   try {
     // Try to update existing message

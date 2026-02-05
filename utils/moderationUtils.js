@@ -3,9 +3,6 @@
  * Centralizes common functions to avoid code duplication.
  */
 
-// Telegram message length limit (4096 chars). Use 4000 for safety margin.
-const TELEGRAM_MAX_LENGTH = 4000;
-
 // Zero-width characters that can be used to obfuscate text
 const ZERO_WIDTH_REGEX = /[\u200B-\u200D\uFEFF]/g;
 
@@ -89,70 +86,7 @@ function normalizeContentForBadwords(text) {
   return withoutSymbols;
 }
 
-/**
- * Build a Telegram message respecting the 4096 character limit.
- * Truncates content intelligently to fit within bounds.
- * @param {Object} parts - Message parts with metadata and content
- * @param {string} parts.prefix - Message prefix/title
- * @param {string} parts.author - Author name
- * @param {string} parts.authorId - Author Discord ID
- * @param {string} parts.channel - Channel name
- * @param {string} [parts.words] - Detected bad words (for badwords handler)
- * @param {string} [parts.violations] - Violation list (for spam handler)
- * @param {string} [parts.action] - Action taken
- * @param {string} parts.content - Message content
- * @returns {string} Message guaranteed to be under TELEGRAM_MAX_LENGTH
- */
-function buildTelegramMessage(parts) {
-  const {
-    prefix = "",
-    author = "",
-    authorId = "",
-    channel = "",
-    words = "",
-    violations = "",
-    action = "",
-    content = "",
-  } = parts;
-
-  // Build metadata (fixed parts)
-  let metadata = `${prefix}\n👤 ${author.slice(0, 50)} (${authorId})\n#️⃣ #${channel.slice(0, 50)}`;
-
-  if (words) {
-    metadata += `\n🔴 Words: ${words.slice(0, 150)}`;
-  }
-  if (violations) {
-    metadata += `\n⚠️ ${violations.slice(0, 200)}`;
-  }
-  if (action) {
-    metadata += `\n📝 Action: ${action.slice(0, 100)}`;
-  }
-
-  metadata += "\n📄 ";
-
-  // Calculate remaining space for content
-  const remainingSpace = TELEGRAM_MAX_LENGTH - metadata.length - 10; // 10 char safety
-
-  // Truncate content to fit
-  const truncatedContent =
-    remainingSpace > 50
-      ? content.slice(0, remainingSpace) + (content.length > remainingSpace ? "…" : "")
-      : "(message too long)";
-
-  return metadata + (truncatedContent || "(empty)");
-}
-
-/**
- * Escape special characters for Telegram Markdown.
- * @param {string} text - Input text
- * @returns {string} Escaped text
- */
-function escapeTelegramMarkdown(text) {
-  return (text || "").replace(/([_*\[\]()`])/g, "\\$1");
-}
-
 module.exports = {
-  TELEGRAM_MAX_LENGTH,
   ZERO_WIDTH_REGEX,
   stripDiacritics,
   normalizeSymbols,
@@ -160,6 +94,4 @@ module.exports = {
   compressRepeats,
   normalizeContentForSpam,
   normalizeContentForBadwords,
-  buildTelegramMessage,
-  escapeTelegramMarkdown,
 };

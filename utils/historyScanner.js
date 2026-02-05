@@ -2,10 +2,10 @@ const fs = require("fs");
 const fsPromises = require("fs").promises;
 const path = require("path");
 const { EmbedBuilder } = require("discord.js");
-const { MODERATION_LOG_CHANNEL_ID, MOD_ROLE_NAME, FILTER_EXEMPT_CHANNEL_IDS } = require("../config/channels");
+const { MODERATION_LOG_CHANNEL_ID, STAFF_ROLE_ID, FILTER_EXEMPT_CHANNEL_IDS } = require("../config/channels");
 const { containsBadWord, findBadWords } = require("../handlers/badwords");
 const { detectSpamViolations } = require("../handlers/spam");
-const { hasBypassRole } = require("../utils/bypass");
+const { hasBypassRole } = require("./bypass");
 
 const scanStateFile = path.join(__dirname, "../data/scanState.json");
 
@@ -445,11 +445,11 @@ async function logScanResults(guild, channel, results) {
     .setFooter({ text: "Automated Security Scan" })
     .setTimestamp();
 
-  const staffRole = guild.roles.cache.find((r) => r.name === MOD_ROLE_NAME);
+  const staffRole = STAFF_ROLE_ID ? guild.roles.cache.get(STAFF_ROLE_ID) : null;
   await logChannel.send({
     content: staffRole && totalViolations > 0 ? `${staffRole}` : "",
     embeds: [mainEmbed],
-  }).catch(() => {});
+  }).catch((err) => console.warn("⚠️ Failed to send scan results:", err.message));
 }
 
 module.exports = {

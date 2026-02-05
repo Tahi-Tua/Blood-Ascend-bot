@@ -1,7 +1,6 @@
 const { EmbedBuilder, PermissionsBitField } = require("discord.js");
-const { READ_ONLY_ROLE_NAME, READ_ONLY_THRESHOLD, MODERATION_LOG_CHANNEL_ID, MOD_ROLE_NAME } = require("../config/channels");
+const { READ_ONLY_ROLE_NAME, READ_ONLY_THRESHOLD } = require("../config/channels");
 const { sendModerationLog } = require("./modLog");
-const { sendToTelegram } = require("./telegram");
 
 async function ensureReadOnlyRole(guild) {
   let role = guild.roles.cache.find((r) => r.name === READ_ONLY_ROLE_NAME);
@@ -66,13 +65,6 @@ async function assignReadOnlyRole(member, totalViolations) {
       .setTimestamp();
 
     await sendModerationLog(guild, modEmbed, member.user);
-
-    if (typeof sendToTelegram === "function") {
-      sendToTelegram(
-        `?? Read-only role assigned\n?? ${member.user.tag} (${member.id})\n??? Violations: ${totalViolations}`,
-        { parse_mode: "Markdown" }
-      );
-    }
 
     return true;
   } catch (err) {

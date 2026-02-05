@@ -1,9 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { Events, EmbedBuilder } = require("discord.js");
-const { MODERATION_LOG_CHANNEL_ID, MOD_ROLE_NAME, GENERAL_CHAT_ID, BUG_REPORTS_CHANNEL_ID, FILTER_EXEMPT_CHANNEL_IDS, FILTER_ENFORCED_CATEGORY_IDS } = require("../config/channels");
+const { MODERATION_LOG_CHANNEL_ID, GENERAL_CHAT_ID, BUG_REPORTS_CHANNEL_ID, FILTER_EXEMPT_CHANNEL_IDS, FILTER_ENFORCED_CATEGORY_IDS } = require("../config/channels");
 const { hasBypassRole } = require("../utils/bypass");
-const { sendToTelegram } = require("../utils/telegram");
 const { increment: incViolations, getCount: getViolationCount, hasReachedThreshold } = require("../utils/violationStore");
 const { assignReadOnlyRole } = require("../utils/readOnlyRole");
 const { READ_ONLY_THRESHOLD } = require("../config/channels");
@@ -12,7 +11,6 @@ const {
   stripDiacritics,
   normalizeSymbols,
   normalizeContentForBadwords,
-  buildTelegramMessage,
 } = require("../utils/moderationUtils");
 // Import centralized modLog to break circular dependency
 const { sendModerationLog } = require("../utils/modLog");
@@ -96,6 +94,9 @@ const memberBadwordReports = new Map(); // Store report message IDs for updating
 // Note: memberModLogMessages moved to utils/modLog.js to break circular dependency
 const memberBadwordLastUpdated = new Map(); // Track last violation timestamp per member
 
+// Maximum number of entries allowed in each Map to prevent memory exhaustion.
+const MAX_MAP_ENTRIES = Number(process.env.BADWORD_MAX_MAP_ENTRIES ?? 5000);
+
 // Prevent unbounded memory usage for long-running processes.
 // Defaults mirror spam.js retention unless overridden via env.
 const BADWORD_HISTORY_RETENTION_MS = Number(
@@ -122,6 +123,28 @@ function purgeExpiredBadwordEntries(now = Date.now()) {
   }
 
   return purged;
+}
+
+/**
+ * Enforce maximum size limit on badword Maps by evicting oldest entries (LRU).
+ * This prevents memory exhaustion on high-activity servers.
+ */
+function enforceMapSizeLimit() {
+  if (memberBadwordLastUpdated.size <= MAX_MAP_ENTRIES) return;
+
+  // Sort by lastUpdated timestamp (oldest first)
+  const entries = Array.from(memberBadwordLastUpdated.entries())
+    .sort((a, b) => a[1] - b[1]);
+
+  // Remove oldest 10% of entries
+  const toRemove = Math.floor(MAX_MAP_ENTRIES * 0.1);
+  for (let i = 0; i < toRemove && i < entries.length; i++) {
+    const userId = entries[i][0];
+    memberBadwordLastUpdated.delete(userId);
+    memberBadwordStats.delete(userId);
+    memberBadwordHistory.delete(userId);
+    memberBadwordReports.delete(userId);
+  }
 }
 
 function getBadwordCacheStats() {
@@ -235,6 +258,9 @@ async function sendMemberBadwordReport(user, detectedWords, messageContent) {
     }
 
     memberBadwordLastUpdated.set(userId, Date.now());
+    
+    // Enforce size limit to prevent memory exhaustion
+    enforceMapSizeLimit();
     
     // Get total violations across all instances
     const totalViolationCount = Object.values(stats).reduce((a, b) => a + b, 0);
@@ -355,18 +381,6 @@ module.exports = (client) => {
     console.log(
       `🚨 Bad word(s) by ${message.author.tag} in #${message.channel.name}: ${detectedWords.join(", ")}`
     );
-
-    if (typeof sendToTelegram === 'function') {
-      const telegramMessage = buildTelegramMessage({
-        prefix: '🔴 Insult detected',
-        author: message.author.tag,
-        authorId: message.author.id,
-        channel: message.channel.name,
-        words: detectedWords.slice(0, 3).join(", "),
-        content: content
-      });
-      sendToTelegram(telegramMessage, { parse_mode: 'Markdown' });
-    }
   });
 };
 
@@ -377,5 +391,3 @@ module.exports.findBadWords = findBadWords;
 module.exports.sendMemberBadwordReport = sendMemberBadwordReport;
 module.exports.purgeExpiredBadwordEntries = purgeExpiredBadwordEntries;
 module.exports.getBadwordCacheStats = getBadwordCacheStats;
-
-// noop touch to trigger Telegram file notifier

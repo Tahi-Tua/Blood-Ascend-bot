@@ -1,4 +1,16 @@
-const { MEMBER_ROLE_NAME, MEMBER_ROLE_ID, PENDING_ROLE_ID, GUEST_ROLE_ID, VISITOR_ROLE_NAME } = require("../config/channels");
+const { 
+  MEMBER_ROLE_NAME, 
+  MEMBER_ROLE_ID, 
+  PENDING_ROLE_ID, 
+  GUEST_ROLE_ID, 
+  VISITOR_ROLE_NAME,
+  TEAM_SEARCH_CHANNEL_ID,
+  CLIPS_CHANNEL_ID,
+  SCREENSHOTS_CHANNEL_ID,
+  BALANCE_CHANGES_CHANNEL_ID,
+  MEMES_CHANNEL_ID,
+  TICKET_CLOSE_DELAY_MS,
+} = require("../config/channels");
 
 const UNVERIFIED_ROLE_NAME = "Unverified";
 const APPLICANT_ROLE_NAME = "Applicant";
@@ -132,7 +144,7 @@ async function applyDeclineRoles(guild, member) {
 async function closeTicketSoon(ticketChannel) {
   setTimeout(() => {
     ticketChannel.delete().catch(() => {});
-  }, 5000);
+  }, TICKET_CLOSE_DELAY_MS);
 }
 
 async function runJoinUsTicketDecision({
@@ -188,11 +200,11 @@ async function runJoinUsTicketDecision({
       )
       .catch(() => {});
 
-    const teamSearchMention = `<#1381575870468198460>`;
-    const clipsMention = `<#1381581265542844496>`;
-    const screenshotsMention = `<#1381575518532534402>`;
-    const balanceChangesMention = `<#1427088947871223848>`;
-    const memesMention = `<#1381575710942167101>`;
+    const teamSearchMention = `<#${TEAM_SEARCH_CHANNEL_ID}>`;
+    const clipsMention = `<#${CLIPS_CHANNEL_ID}>`;
+    const screenshotsMention = `<#${SCREENSHOTS_CHANNEL_ID}>`;
+    const balanceChangesMention = `<#${BALANCE_CHANGES_CHANNEL_ID}>`;
+    const memesMention = `<#${MEMES_CHANNEL_ID}>`;
 
     const declineMessage =
       "Unfortunately your application has been rejected, " +

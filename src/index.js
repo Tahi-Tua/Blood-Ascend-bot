@@ -3,6 +3,12 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
 
+// Validate required environment variables
+if (!process.env.DISCORD_TOKEN) {
+  console.error("❌ DISCORD_TOKEN is required. Please set it in your .env file.");
+  process.exit(1);
+}
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
