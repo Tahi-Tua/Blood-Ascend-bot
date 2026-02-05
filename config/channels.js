@@ -11,6 +11,7 @@ module.exports = {
   STAFF_LOG_CHANNEL_ID: "1466535478907113585",
   MODERATION_LOG_CHANNEL_ID: "1466535478907113585", // Salon pour les logs de modération
   SVS_REMINDER_CHANNEL_ID: "1466912367324561530", // Salon pour les rappels SVS
+  SVS_CHANNEL_ID: "1466909339465027708", // Salon pour afficher les équipes SVS
   BUG_REPORTS_CHANNEL_ID: null, // TODO: Remplacer si utilisé
 
   // ═══════════════════════════════════════════════════════════════

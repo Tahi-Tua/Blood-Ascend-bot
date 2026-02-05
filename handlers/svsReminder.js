@@ -6,7 +6,7 @@ const {
   ButtonStyle,
   MessageFlags,
 } = require("discord.js");
-const { SVS_REMINDER_CHANNEL_ID, SVS_ROLE_ID } = require("../config/channels");
+const { SVS_REMINDER_CHANNEL_ID, SVS_ROLE_ID, SVS_CHANNEL_ID } = require("../config/channels");
 
 // Desired local times (CET): 2:30, 7:30, 11:30, 16:00, 19:30, 23:30
 // We use the server's local time (no UTC conversion)
@@ -160,9 +160,14 @@ async function finalizePoll(channel, messageId) {
     resultEmbed.setDescription(teamsDescription);
   }
 
-  resultEmbed.setFooter({ text: "Xavier Pro • SVS Teams" });
+  resultEmbed.setFooter({ text: "༒ 𝔹𝕝𝕠𝕠𝕕 𝔸𝕤𝕔𝕖𝕟𝕕 ༒ • SVS Teams" });
 
-  await channel.send({ embeds: [resultEmbed] });
+  const svsChannel = channel.client.channels.cache.get(SVS_CHANNEL_ID);
+  if (svsChannel) {
+    await svsChannel.send({ embeds: [resultEmbed] });
+  } else {
+    await channel.send({ embeds: [resultEmbed] });
+  }
   console.log(`📊 SVS poll finalized: ${yesMembers.length} yes, ${noMembers.length} no`);
 }
 
