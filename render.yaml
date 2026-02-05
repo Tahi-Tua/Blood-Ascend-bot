@@ -1,0 +1,12 @@
+services:
+  - type: worker
+    name: blood-ascend-bot
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: NODE_ENV
+        value: production
