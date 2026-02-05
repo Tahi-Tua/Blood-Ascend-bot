@@ -160,7 +160,7 @@ async function finalizePoll(channel, messageId) {
     resultEmbed.setDescription(teamsDescription);
   }
 
-  resultEmbed.setFooter({ text: "Xavier Pro • SVS Teams" });
+  resultEmbed.setFooter({ text: "༒ 𝔹𝕝𝕠𝕠𝕕 𝔸𝕤𝕔𝕖𝕟𝕕 ༒ • SVS Teams" });
 
   await channel.send({ embeds: [resultEmbed] });
   console.log(`📊 SVS poll finalized: ${yesMembers.length} yes, ${noMembers.length} no`);
