@@ -10,7 +10,9 @@ const RULES_TITLE = "📜 ༒ Blood Ascend ༒ RÈGLES DU SERVEUR";
 
 const RULES_DESCRIPTION = `Bienvenue dans le salon des règles et directives du serveur 📝
 
-Ces règles sont en place pour garantir un environnement respectueux et inclusif pour tous. Elles s'appliquent à **tous les messages** que vous publiez sur le serveur ainsi qu'à votre **profil Discord**.`;
+Ces règles sont en place pour garantir un environnement respectueux et inclusif pour tous. Elles s'appliquent à **tous les messages** que vous publiez sur le serveur ainsi qu'à votre **profil Discord**.
+
+⚠️ **L'acceptation des règles est OBLIGATOIRE.** Vous devez cliquer sur le bouton ci-dessous pour accéder au serveur. Sans cela, vous ne pourrez ni lire ni écrire dans les autres salons.`;
 
 const RULES_FIELDS = [
   {
@@ -45,7 +47,7 @@ const RULES_FIELDS = [
   },
 ];
 
-const RULES_FOOTER = "༒ Blood Ascend ༒ • Cliquez sur le bouton ci-dessous pour accepter les règles";
+const RULES_FOOTER = "༒ Blood Ascend ༒ • ⚠️ OBLIGATOIRE : Cliquez sur le bouton pour accepter les règles et accéder au serveur";
 
 const RULES_COLOR = 0x2b2d31; // Couleur thème sombre
 

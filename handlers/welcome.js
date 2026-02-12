@@ -27,9 +27,10 @@ function getWelcomePayload(member) {
     )
     .addFields(
       {
-        name: "🚪 Commence ici",
+        name: "🚪 Commence ici (OBLIGATOIRE)",
         value: [
-          `• Lis les règles : <#${RULES_CHANNEL_ID}>`,
+          `• **⚠️ Lis et accepte les règles : <#${RULES_CHANNEL_ID}>**`,
+          `• Tu **dois** cliquer sur le bouton ✅ pour accéder au serveur.`,
         ].join("\n"),
       },
       {
@@ -53,7 +54,7 @@ function getWelcomePayload(member) {
     );
 
   return {
-    content: `🎉 Bienvenue ${member} ! Fais comme chez toi.`,
+    content: `🎉 Bienvenue ${member} ! ⚠️ **N'oublie pas d'accepter les règles** dans <#${RULES_CHANNEL_ID}> pour accéder au serveur.`,
     embeds: [embed1, embed2],
     files: [introAttachment],
   };
