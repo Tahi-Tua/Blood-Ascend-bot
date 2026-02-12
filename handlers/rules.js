@@ -1,5 +1,6 @@
 const { Events, EmbedBuilder, MessageFlags } = require("discord.js");
-const { STAFF_LOG_CHANNEL_ID, MEMBER_ROLE_NAME, LEADER_ROLE_ID, STAFF_ROLE_ID, JOIN_US_CHANNEL_ID } = require("../config/channels");
+const { STAFF_LOG_CHANNEL_ID, MEMBER_ROLE_NAME, LEADER_ROLE_ID, STAFF_ROLE_ID, JOIN_US_CHANNEL_ID, UNVERIFIED_ROLE_ID, HELLO_CHANNEL_ID } = require("../config/channels");
+const { getWelcomePayload } = require("./welcome");
 
 const APPLICANT_ROLE_NAME = "Applicant"; // Role for users who accepted rules but not yet approved
 
@@ -41,8 +42,18 @@ module.exports = (client) => {
           console.log(`⚠️ Role '${APPLICANT_ROLE_NAME}' not found. Please create it in Discord.`);
         }
 
-        // IMPORTANT: keep the Unverified role until staff accepts the application in the ticket.
-        // If we remove it here, Discord may reveal hidden channels too early.
+        // Retirer le rôle Unverified maintenant que les règles sont acceptées
+        if (UNVERIFIED_ROLE_ID) {
+          const unverifiedRole = guild.roles.cache.get(UNVERIFIED_ROLE_ID);
+          if (unverifiedRole && member.roles.cache.has(unverifiedRole.id)) {
+            try {
+              await member.roles.remove(unverifiedRole);
+              console.log(`✅ Rôle Unverified retiré de ${member.user.tag}`);
+            } catch (err) {
+              console.error(`❌ Impossible de retirer le rôle Unverified de ${member.user.tag}:`, err.message);
+            }
+          }
+        }
       }
 
       const logChannel = await guild.channels
@@ -98,11 +109,23 @@ module.exports = (client) => {
       // Send confirmation message
       await interaction.editReply({
         content:
-          "✅ Règles acceptées !\n\n" +
+          "✅ Règles acceptées ! Bienvenue sur le serveur !\n\n" +
           `📋 **[Salon JOIN-US](https://discord.com/channels/${guild.id}/${JOIN_US_CHANNEL_ID})**\n\n` +
           "ℹ️ Si tu veux **postuler pour rejoindre le syndicat**, envoie ton **ID Joueur** et tes **captures d'écran de compte/héros** dans le salon Join-Us.\n" +
           "Tu n'as **pas besoin** de postuler juste pour être membre de ce serveur.",
       });
+
+      // Envoyer le message de bienvenue MAINTENANT (après acceptation des règles)
+      if (HELLO_CHANNEL_ID) {
+        const welcomeChannel = guild.channels.cache.get(HELLO_CHANNEL_ID);
+        if (welcomeChannel) {
+          const welcomePayload = getWelcomePayload(member);
+          await welcomeChannel.send(welcomePayload).catch((err) => {
+            console.error(`❌ Erreur envoi message de bienvenue pour ${member.user.tag}:`, err.message);
+          });
+          console.log(`👋 Message de bienvenue envoyé pour ${member.user.tag} (après acceptation des règles)`);
+        }
+      }
 
       // Send notification to JOIN_US channel
       const joinUsChannel = guild.channels.cache.get(JOIN_US_CHANNEL_ID);

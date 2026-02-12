@@ -27,10 +27,9 @@ function getWelcomePayload(member) {
     )
     .addFields(
       {
-        name: "🚪 Commence ici (OBLIGATOIRE)",
+        name: "✅ Règles acceptées",
         value: [
-          `• **⚠️ Lis et accepte les règles : <#${RULES_CHANNEL_ID}>**`,
-          `• Tu **dois** cliquer sur le bouton ✅ pour accéder au serveur.`,
+          `• Tu as accès à tous les salons du serveur.`,
         ].join("\n"),
       },
       {
@@ -54,7 +53,7 @@ function getWelcomePayload(member) {
     );
 
   return {
-    content: `🎉 Bienvenue ${member} ! ⚠️ **N'oublie pas d'accepter les règles** dans <#${RULES_CHANNEL_ID}> pour accéder au serveur.`,
+    content: `🎉 Bienvenue ${member} ! Tu as accepté les règles, tu as maintenant accès au serveur. Fais comme chez toi !`,
     embeds: [embed1, embed2],
     files: [introAttachment],
   };
@@ -91,24 +90,9 @@ module.exports = (client) => {
         }
       }
 
-      // Send welcome message to the welcome channel
-      if (!HELLO_CHANNEL_ID) {
-        console.warn("⚠️ HELLO_CHANNEL_ID not configured, skipping welcome message");
-        return;
-      }
-
-      const welcomeChannel = guild.channels.cache.get(HELLO_CHANNEL_ID);
-      if (!welcomeChannel) {
-        console.warn(`⚠️ Welcome channel ${HELLO_CHANNEL_ID} not found`);
-        return;
-      }
-
-      const payload = getWelcomePayload(member);
-      await welcomeChannel.send(payload).catch((err) => {
-        console.error(`❌ Failed to send welcome message for ${member.user.tag}:`, err.message);
-      });
-
-      console.log(`👋 Welcome message sent for ${member.user.tag}`);
+      // Le message de bienvenue est envoyé UNIQUEMENT après l'acceptation des règles (voir rules.js)
+      // Ici on assigne juste le rôle Unverified pour bloquer l'accès
+      console.log(`🔒 ${member.user.tag} a rejoint le serveur — en attente d'acceptation des règles`);
     } catch (err) {
       console.error(`❌ Error in welcome handler for ${member.user?.tag}:`, err.message);
     }

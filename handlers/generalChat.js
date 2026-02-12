@@ -32,8 +32,13 @@ module.exports = (client) => {
       message.embeds.length > 0 &&
       message.embeds.some((e) => {
         const type = (e.type || "").toLowerCase();
-        // Autoriser les GIFs (type 'gifv' de Tenor/Giphy)
+        // Autoriser tous les GIFs (Tenor/Giphy = gifv, liens directs .gif = image)
         if (type === "gifv") return false;
+
+        // Vérifier si c'est un embed d'image GIF (lien .gif direct)
+        const embedUrl = (e.url || e.thumbnail?.url || e.image?.url || "").toLowerCase();
+        if (embedUrl.includes(".gif")) return false;
+
         return (
           type === "image" ||
           type === "video" ||
