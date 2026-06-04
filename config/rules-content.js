@@ -6,48 +6,54 @@
 
 const RULES_BANNER_FILENAME = "rules-banner.jpg";
 
-const RULES_TITLE = "📜 ༒ Blood Ascend ༒ RÈGLES DU SERVEUR";
+const RULES_TITLE = "📜 ༒ Blood Ascend ༒ RÈGLES / SERVER RULES";
 
 const RULES_DESCRIPTION = `Bienvenue dans le salon des règles et directives du serveur 📝
+Welcome to the server rules and guidelines channel 📝
 
-Ces règles sont en place pour garantir un environnement respectueux et inclusif pour tous. Elles s'appliquent à **tous les messages** que vous publiez sur le serveur ainsi qu'à votre **profil Discord**.
+Blood Ascend est un serveur **FR/EN** : le français et l'anglais sont officiellement autorisés.
+Blood Ascend is a **FR/EN** server: French and English are officially allowed.
 
-⚠️ **L'acceptation des règles est OBLIGATOIRE.** Vous devez cliquer sur le bouton ci-dessous pour accéder au serveur. Sans cela, vous ne pourrez ni lire ni écrire dans les autres salons.`;
+Ces règles garantissent un environnement respectueux et inclusif pour tous. Elles s'appliquent à **tous les messages** publiés sur le serveur ainsi qu'à votre **profil Discord**.
+These rules keep the server respectful and inclusive for everyone. They apply to **all messages** posted on the server and to your **Discord profile**.
+
+⚠️ **L'acceptation des règles est OBLIGATOIRE.** Vous devez cliquer sur le bouton ci-dessous pour accéder au serveur. Sans cela, vous ne pourrez ni lire ni écrire dans les autres salons.
+⚠️ **Accepting the rules is REQUIRED.** You must click the button below to access the server. Without this, you cannot read or write in the other channels.`;
 
 const RULES_FIELDS = [
   {
-    name: "🌐 Langue",
-    value: "Ce serveur représente une **communauté francophone** et accueille des joueurs de tous les pays. Veuillez utiliser le français et n'essayez pas de contourner nos filtres ; ils sont là pour une bonne raison.",
+    name: "🌍 Langues / Languages",
+    value: "Blood Ascend est une communauté francophone ouverte à l'international. Le **français** et l'**anglais** sont autorisés dans les salons généraux.\n\nBlood Ascend is a French-speaking community open to international members. **French** and **English** are allowed in general channels.\n\nMerci de rester clair, respectueux et compréhensible dans les deux langues.\nPlease stay clear, respectful and understandable in both languages.",
     inline: false,
   },
   {
-    name: "💬 Langage Approprié",
-    value: "Utilisez un langage respectueux et courtois. N'oubliez pas que certains mots peuvent être offensants s'ils sont utilisés dans un mauvais contexte.",
+    name: "💬 Langage approprié / Appropriate Language",
+    value: "Utilisez un langage respectueux et courtois. Certains mots peuvent être offensants selon le contexte.\n\nUse respectful and courteous language. Some words can be offensive depending on context.",
     inline: false,
   },
   {
-    name: "⚠️ Sujets Sensibles",
-    value: "Évitez de discuter de sujets sérieux tels que la **politique**, la **religion** ou d'autres sujets sensibles.",
+    name: "⚠️ Sujets sensibles / Sensitive Topics",
+    value: "Évitez les débats sensibles comme la **politique**, la **religion** ou les sujets pouvant créer des conflits.\n\nAvoid sensitive debates such as **politics**, **religion**, or topics that can create conflicts.",
     inline: false,
   },
   {
-    name: "😀 Réactions",
-    value: "Soyez prudent avec les réactions. Tout contenu restreint décrit ci-dessus, créé avec des réactions emoji, est également interdit. Gardez à l'esprit que certaines réactions peuvent être aussi offensantes que certains mots dans un mauvais contexte.",
+    name: "😀 Réactions / Reactions",
+    value: "Soyez prudent avec les réactions emoji. Un contenu interdit reste interdit même s'il est exprimé avec des réactions.\n\nBe careful with emoji reactions. Restricted content remains restricted even when expressed through reactions.",
     inline: false,
   },
   {
-    name: "🔊 Salons Vocaux",
-    value: "Maintenez un comportement correct dans les salons vocaux. Évitez d'utiliser des modificateurs de voix ou de diffuser des sons forts ou de la musique. Changer fréquemment de salon vocal pour causer des perturbations n'est pas non plus autorisé.",
+    name: "🔊 Salons vocaux / Voice Channels",
+    value: "Gardez un comportement correct en vocal. Évitez les sons forts, la musique non demandée, les modificateurs de voix abusifs et les changements de salon pour déranger.\n\nKeep proper behavior in voice channels. Avoid loud sounds, unwanted music, abusive voice changers, and switching channels to disturb others.",
     inline: false,
   },
   {
-    name: "🤖 Surveillance du Bot",
-    value: "**Note :** Les messages de spam et les expressions inappropriées seront automatiquement enregistrés dans votre historique du serveur par notre bot. Des violations répétées peuvent entraîner des avertissements, des mutes ou des bannissements.",
+    name: "🤖 Surveillance du bot / Bot Moderation",
+    value: "Les messages de spam et les expressions inappropriées sont automatiquement enregistrés par le bot. Les violations répétées peuvent entraîner des avertissements, des mutes ou des bannissements.\n\nSpam and inappropriate expressions are automatically logged by the bot. Repeated violations may lead to warnings, mutes or bans.",
     inline: false,
   },
 ];
 
-const RULES_FOOTER = "༒ Blood Ascend ༒ • ⚠️ OBLIGATOIRE : Cliquez sur le bouton pour accepter les règles et accéder au serveur";
+const RULES_FOOTER = "༒ Blood Ascend ༒ • OBLIGATOIRE / REQUIRED : Cliquez pour accepter les règles / Click to accept the rules";
 
 const RULES_COLOR = 0x2b2d31; // Couleur thème sombre
 
