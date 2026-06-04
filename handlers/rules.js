@@ -1,8 +1,31 @@
 const { Events, EmbedBuilder, MessageFlags } = require("discord.js");
-const { STAFF_LOG_CHANNEL_ID, MEMBER_ROLE_NAME, LEADER_ROLE_ID, STAFF_ROLE_ID, JOIN_US_CHANNEL_ID, UNVERIFIED_ROLE_ID, HELLO_CHANNEL_ID } = require("../config/channels");
+const {
+  STAFF_LOG_CHANNEL_ID,
+  MEMBER_ROLE_ID,
+  MEMBER_ROLE_NAME,
+  LEADER_ROLE_ID,
+  STAFF_ROLE_ID,
+  JOIN_US_CHANNEL_ID,
+  UNVERIFIED_ROLE_ID,
+  HELLO_CHANNEL_ID,
+  APPLICANT_ROLE_ID,
+} = require("../config/channels");
 const { getWelcomePayload } = require("./welcome");
 
 const APPLICANT_ROLE_NAME = "Applicant"; // Role for users who accepted rules but not yet approved
+
+function findRoleByIdOrName(guild, roleId, roleName) {
+  if (roleId) {
+    const roleById = guild.roles.cache.get(roleId);
+    if (roleById) return roleById;
+  }
+
+  if (roleName) {
+    return guild.roles.cache.find((role) => role.name === roleName) || null;
+  }
+
+  return null;
+}
 
 module.exports = (client) => {
   client.on(Events.InteractionCreate, async (interaction) => {
@@ -22,13 +45,13 @@ module.exports = (client) => {
       const guild = interaction.guild;
       const member = interaction.member;
 
-      // Check if already a full member
-      const memberRole = guild.roles.cache.find((r) => r.name === MEMBER_ROLE_NAME);
+      // Check if already a full member using ID first, then name fallback.
+      const memberRole = findRoleByIdOrName(guild, MEMBER_ROLE_ID, MEMBER_ROLE_NAME);
       const alreadyHasRole = memberRole && member.roles.cache.has(memberRole.id);
 
-      // Find or check for Applicant role (intermediate role with limited access)
-      let applicantRole = guild.roles.cache.find((r) => r.name === APPLICANT_ROLE_NAME);
-      
+      // Find Applicant role using ID first, then name fallback.
+      const applicantRole = findRoleByIdOrName(guild, APPLICANT_ROLE_ID, APPLICANT_ROLE_NAME);
+
       if (!alreadyHasRole) {
         // Give Applicant role (limited access - only Join-Us channel)
         if (applicantRole && !member.roles.cache.has(applicantRole.id)) {
@@ -39,7 +62,7 @@ module.exports = (client) => {
             console.error("❌ Cannot add Applicant role:", err.message);
           }
         } else if (!applicantRole) {
-          console.log(`⚠️ Role '${APPLICANT_ROLE_NAME}' not found. Please create it in Discord.`);
+          console.log(`⚠️ Role '${APPLICANT_ROLE_NAME}' not found. Please create it in Discord or configure APPLICANT_ROLE_ID.`);
         }
 
         // Retirer le rôle Unverified maintenant que les règles sont acceptées
@@ -63,24 +86,26 @@ module.exports = (client) => {
         const logEmbed = new EmbedBuilder()
           .setColor(alreadyHasRole ? 0xffaa00 : 0x00ff00)
           .setTitle(
-            alreadyHasRole ? "🔄 Bouton Règles Cliqué" : "✅ Règles Acceptées",
+            alreadyHasRole ? "🔄 Bouton Règles Cliqué" : "✅ Règles Acceptées / Rules Accepted",
           )
           .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
           .addFields(
-            { name: "👤 Utilisateur", value: `${member.user.tag}`, inline: true },
+            { name: "👤 Utilisateur / User", value: `${member.user.tag}`, inline: true },
             { name: "🆔 ID", value: `${member.user.id}`, inline: true },
             {
-              name: "📌 Statut",
-              value: alreadyHasRole ? "Déjà membre" : "Règles acceptées (en attente d'approbation du staff)",
+              name: "📌 Statut / Status",
+              value: alreadyHasRole
+                ? "Déjà membre / Already a member"
+                : "Règles acceptées / Rules accepted (en attente d'approbation du staff / waiting for staff approval)",
               inline: false,
             },
           )
-          .setFooter({ text: "༒ Blood Ascend ༒ • Système de Vérification" })
+          .setFooter({ text: "༒ Blood Ascend ༒ • Système de Vérification / Verification System" })
           .setTimestamp();
 
         const leaderRole = guild.roles.cache.get(LEADER_ROLE_ID);
         const staffRole = guild.roles.cache.get(STAFF_ROLE_ID);
-        const roleMentions = [leaderRole ? `<@&${LEADER_ROLE_ID}>` : '', staffRole ? `<@&${STAFF_ROLE_ID}>` : ''].filter(Boolean).join(' ');
+        const roleMentions = [leaderRole ? `<@&${LEADER_ROLE_ID}>` : "", staffRole ? `<@&${STAFF_ROLE_ID}>` : ""].filter(Boolean).join(" ");
         await logChannel
           .send({
             content: roleMentions,
@@ -102,17 +127,20 @@ module.exports = (client) => {
 
       if (alreadyHasRole) {
         return interaction.editReply({
-          content: "✔ Tu as déjà accepté les règles !",
+          content: "✔ Tu as déjà accepté les règles ! / You have already accepted the rules!",
         });
       }
 
       // Send confirmation message
       await interaction.editReply({
         content:
-          "✅ Règles acceptées ! Bienvenue sur le serveur !\n\n" +
-          `📋 **[Salon JOIN-US](https://discord.com/channels/${guild.id}/${JOIN_US_CHANNEL_ID})**\n\n` +
+          "✅ Règles acceptées ! Bienvenue sur le serveur FR/EN.\n" +
+          "✅ Rules accepted! Welcome to the FR/EN server.\n\n" +
+          `📋 **[Salon JOIN-US / JOIN-US Channel](https://discord.com/channels/${guild.id}/${JOIN_US_CHANNEL_ID})**\n\n` +
           "ℹ️ Si tu veux **postuler pour rejoindre le syndicat**, envoie ton **ID Joueur** et tes **captures d'écran de compte/héros** dans le salon Join-Us.\n" +
-          "Tu n'as **pas besoin** de postuler juste pour être membre de ce serveur.",
+          "ℹ️ If you want to **apply to join the syndicate**, send your **Player ID** and **account/hero screenshots** in Join-Us.\n\n" +
+          "Tu n'as **pas besoin** de postuler juste pour être membre de ce serveur.\n" +
+          "You do **not need** to apply just to be a member of this server.",
       });
 
       // Envoyer le message de bienvenue MAINTENANT (après acceptation des règles)
@@ -132,20 +160,21 @@ module.exports = (client) => {
       if (joinUsChannel) {
         const welcomeEmbed = new EmbedBuilder()
           .setColor(0x00d4ff)
-          .setTitle("🎯 Candidature au Syndicat (Optionnel)")
+          .setTitle("🎯 Candidature au Syndicat / Syndicate Application (Optional)")
           .setDescription(
-            `Bienvenue, **${member.user}** !\n\n` +
-            `Ce salon est **uniquement** pour les joueurs qui veulent **postuler pour rejoindre le syndicat**.\n\n` +
-            `**Ce qu'il faut envoyer (si tu postules) :**\n` +
-            `🆔 Ton ID Joueur\n` +
-            `📸 Captures d'écran (stats/héros) **ou** un lien officiel de stats\n\n` +
-            `**Que se passe-t-il ensuite :**\n` +
-            `✅ Notre staff examinera ta soumission\n` +
-            `🎉 Si approuvé, un membre du staff te contactera\n` +
-            `⏱️ L'examen prend généralement quelques heures`
+            `Bienvenue, **${member.user}** ! / Welcome, **${member.user}**!\n\n` +
+              `Ce salon est **uniquement** pour les joueurs qui veulent **postuler pour rejoindre le syndicat**.\n` +
+              `This channel is **only** for players who want to **apply to join the syndicate**.\n\n` +
+              `**Ce qu'il faut envoyer si tu postules / What to send if you apply:**\n` +
+              `🆔 Ton ID Joueur / Your Player ID\n` +
+              `📸 Captures d'écran (stats/héros) **ou** un lien officiel de stats / Screenshots (stats/heroes) **or** an official stats link\n\n` +
+              `**Suite / Next steps:**\n` +
+              `✅ Notre staff examinera ta soumission / Our staff will review your submission\n` +
+              `🎉 Si approuvé, un membre du staff te contactera / If approved, a staff member will contact you\n` +
+              `⏱️ L'examen prend généralement quelques heures / Review usually takes a few hours`
           )
           .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-          .setFooter({ text: "༒ Blood Ascend ༒ • Système de Recrutement" })
+          .setFooter({ text: "༒ Blood Ascend ༒ • Recrutement / Recruitment" })
           .setTimestamp();
 
         await joinUsChannel
@@ -163,7 +192,7 @@ module.exports = (client) => {
       if (error?.code === 10062) return;
 
       const payload = {
-        content: "❌ Une erreur s'est produite. Veuillez réessayer.",
+        content: "❌ Une erreur s'est produite. Veuillez réessayer. / An error occurred. Please try again.",
         flags: MessageFlags.Ephemeral,
       };
 
