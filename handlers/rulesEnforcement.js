@@ -1,7 +1,7 @@
 /**
  * Rules Enforcement Handler
- * Blocks messages from users who haven't accepted the rules (no Applicant or Member role).
- * Only the rules channel is accessible without accepting.
+ * Blocks messages from users who haven't accepted the rules.
+ * Only the rules and welcome channels are accessible before accepting.
  */
 
 const { Events, PermissionsBitField } = require("discord.js");
@@ -9,6 +9,8 @@ const {
   RULES_CHANNEL_ID,
   HELLO_CHANNEL_ID,
   UNVERIFIED_ROLE_ID,
+  APPLICANT_ROLE_ID,
+  MEMBER_ROLE_ID,
   MEMBER_ROLE_NAME,
   BYPASS_ROLE_IDS,
 } = require("../config/channels");
@@ -18,6 +20,13 @@ const APPLICANT_ROLE_NAME = "Applicant";
 // Cooldown map to avoid spamming DMs (userId → timestamp)
 const dmCooldowns = new Map();
 const COOLDOWN_MS = 60_000; // 1 minute between DM reminders
+
+function hasRoleByIdOrName(member, roleId, roleName) {
+  if (!member?.roles?.cache) return false;
+  if (roleId && member.roles.cache.has(roleId)) return true;
+  if (roleName) return member.roles.cache.some((role) => role.name === roleName);
+  return false;
+}
 
 module.exports = (client) => {
   client.on(Events.MessageCreate, async (message) => {
@@ -39,14 +48,21 @@ module.exports = (client) => {
       if (hasBypass) return;
     }
 
-    // Check if user has Unverified role and does NOT have Applicant or Member role
-    const hasUnverified = UNVERIFIED_ROLE_ID && member.roles.cache.has(UNVERIFIED_ROLE_ID);
-    const hasApplicant = member.roles.cache.some((r) => r.name === APPLICANT_ROLE_NAME);
-    const hasMember = member.roles.cache.some((r) => r.name === MEMBER_ROLE_NAME);
+    const hasUnverified = hasRoleByIdOrName(member, UNVERIFIED_ROLE_ID);
+    const hasApplicant = hasRoleByIdOrName(member, APPLICANT_ROLE_ID, APPLICANT_ROLE_NAME);
+    const hasMember = hasRoleByIdOrName(member, MEMBER_ROLE_ID, MEMBER_ROLE_NAME);
 
-    // If user is unverified and hasn't accepted rules (no Applicant or Member role)
-    if (!hasUnverified) return; // Not unverified, let them through
-    if (hasApplicant || hasMember) return; // Already accepted rules
+    // Members accepted by ID/name must never be blocked by the Unverified gate.
+    if (hasApplicant || hasMember) {
+      if (hasUnverified && UNVERIFIED_ROLE_ID) {
+        await member.roles.remove(UNVERIFIED_ROLE_ID).catch(() => {});
+      }
+      return;
+    }
+
+    // Only users explicitly carrying Unverified are blocked.
+    // Existing members without this role are not rejected retroactively.
+    if (!hasUnverified) return;
 
     // --- User hasn't accepted rules → block the message ---
 
@@ -68,10 +84,12 @@ module.exports = (client) => {
 
       await message.author
         .send(
-          `⚠️ **Tu dois d'abord accepter les règles !**\n\n` +
-          `Tu ne peux pas envoyer de messages sur **${message.guild.name}** tant que tu n'as pas lu et accepté les règles.\n\n` +
-          `👉 Rends-toi dans <#${RULES_CHANNEL_ID}> et clique sur le bouton **✅ Accepter les Règles**.\n\n` +
-          `C'est **obligatoire** pour accéder au serveur.`
+          `⚠️ **Tu dois d'abord accepter les règles / You must accept the rules first!**\n\n` +
+            `Tu ne peux pas envoyer de messages sur **${message.guild.name}** tant que tu n'as pas lu et accepté les règles.\n` +
+            `You cannot send messages on **${message.guild.name}** until you have read and accepted the rules.\n\n` +
+            `👉 Va dans <#${RULES_CHANNEL_ID}> et clique sur **✅ Accepter les Règles**.\n` +
+            `👉 Go to <#${RULES_CHANNEL_ID}> and click **✅ Accepter les Règles**.\n\n` +
+            `C'est **obligatoire** pour accéder au serveur. / This is **required** to access the server.`
         )
         .catch(() => {}); // User may have DMs disabled
     }
