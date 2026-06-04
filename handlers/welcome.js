@@ -21,26 +21,27 @@ function getWelcomePayload(member) {
 
   const embed1 = new EmbedBuilder()
     .setColor(0x3498db)
-    .setTitle("🌟 Bienvenue sur ༒ Blood Ascend ༒ 🌟")
+    .setTitle("🌟 Welcome / Bienvenue sur ༒ Blood Ascend ༒ 🌟")
     .setDescription(
-      `Salut ${member} 👋\nContent de te voir ! Voici comment commencer :`,
+      `Salut ${member} 👋\nContent de te voir ! Blood Ascend est un serveur **FR/EN** : français et anglais sont autorisés.\n\n` +
+        `Hi ${member} 👋\nGlad to see you! Blood Ascend is a **FR/EN** server: French and English are allowed.`,
     )
     .addFields(
       {
-        name: "✅ Règles acceptées",
+        name: "✅ Règles acceptées / Rules accepted",
         value: [
-          `• Tu as accès à tous les salons du serveur.`,
+          `• Tu as accès aux salons du serveur.`,
+          `• You now have access to the server channels.`,
         ].join("\n"),
       },
       {
-        name: "🎮 Explore et partage",
+        name: "🎮 Explore et partage / Explore and share",
         value: [
-          `• Discute avec tout le monde : <#${GENERAL_CHAT_ID}>`,
-          `• Poste tes highlights : <#${SCREENSHOTS_CHANNEL_ID}>`,
-          `• Découvre des astuces : <#${DIVINE_TIPS_CHANNEL_ID}>`,
+          `• Discussion générale / General chat : <#${GENERAL_CHAT_ID}>`,
+          `• Highlights : <#${SCREENSHOTS_CHANNEL_ID}>`,
+          `• Astuces / Tips : <#${DIVINE_TIPS_CHANNEL_ID}>`,
         ].join("\n"),
       },
-      
     )
     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
     .setImage("attachment://intro.gif")
@@ -49,11 +50,16 @@ function getWelcomePayload(member) {
   const embed2 = new EmbedBuilder()
     .setColor(0x2ecc71)
     .setDescription(
-      `Tu veux **rejoindre le syndicat** ? Poste ton **ID Joueur** et tes **captures d'écran** (stats/héros), ou un **lien officiel de stats** dans ${joinUsMention}.\n\n`
+      `Tu veux **rejoindre le syndicat** ? Poste ton **ID Joueur** et tes **captures d'écran** (stats/héros), ou un **lien officiel de stats** dans ${joinUsMention}.\n\n` +
+        `Want to **join the syndicate**? Post your **Player ID** and your **account/hero screenshots**, or an **official stats link**, in ${joinUsMention}.\n\n` +
+        `La candidature au syndicat est optionnelle pour être membre du serveur.\n` +
+        `Applying to the syndicate is optional for server membership.`
     );
 
   return {
-    content: `🎉 Bienvenue ${member} ! Tu as accepté les règles, tu as maintenant accès au serveur. Fais comme chez toi !`,
+    content:
+      `🎉 Bienvenue ${member} ! Tu as accepté les règles et tu as maintenant accès au serveur. Français et anglais sont autorisés.\n` +
+      `🎉 Welcome ${member}! You accepted the rules and now have access to the server. French and English are allowed.`,
     embeds: [embed1, embed2],
     files: [introAttachment],
   };
